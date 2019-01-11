@@ -62,11 +62,11 @@ kramdown:
 # Gitalk
 gitalk:
   enable: true    #是否开启Gitalk评论
-  clientID: f2c84e7629bb1446c1a4                            #生成的clientID
-  clientSecret: ca6d6139d1e1b8c43f8b2e19492ddcac8b322d0d    #生成的clientSecret
-  repo: qiubaiying.github.io    #仓库名称
-  owner: qiubaiying    #github用户名
-  admin: qiubaiying
+  clientID: b58d15dbf84c555e60c7                            #生成的clientID
+  clientSecret: e42ba24368bff614ddee4bc5a134857985a61bfa    #生成的clientSecret
+  repo: LudoArt.github.io    #仓库名称
+  owner: LudoArt    #github用户名
+  admin: LudoArt
   distractionFreeMode: true #是否启用类似FB的阴影遮罩
 
 
@@ -78,7 +78,7 @@ gitalk:
 
 # Google Analytics
 ga_track_id: 'UA-132318213-1'            # Format: UA-xxxxxx-xx
-ga_domain: www.ludoart.cn               # 默认的是 auto, 这里我是自定义了的域名，你如果没有自己的域名，需要改成auto
+ga_domain: auto               # 默认的是 auto, 这里我是自定义了的域名，你如果没有自己的域名，需要改成auto
 
 
 
