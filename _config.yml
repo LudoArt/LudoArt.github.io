@@ -62,8 +62,8 @@ kramdown:
 # Gitalk
 gitalk:
   enable: true    #是否开启Gitalk评论
-  clientID: 2313105255f2dadd0153                            #生成的clientID
-  clientSecret: aa4b6399b1a2210424283291b81303a9a4797a77    #生成的clientSecret
+  clientID: 8c88b8aa9cec117f88b6                            #生成的clientID
+  clientSecret: 06d769134b518f7e49a0845404a022ee08b91214    #生成的clientSecret
   repo: LudoArt.github.io    #仓库名称
   owner: LudoArt    #github用户名
   admin: LudoArt
