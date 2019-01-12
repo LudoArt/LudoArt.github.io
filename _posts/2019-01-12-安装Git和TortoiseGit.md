@@ -1,5 +1,3 @@
-[TOC]
-
 # 安装Git和TortoiseGit
 
 ## 安装Git
