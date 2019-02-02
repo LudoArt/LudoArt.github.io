@@ -24,7 +24,7 @@ tags:
 ## 配置Git设置
 1. 打开“Git Bash"（可以在开始菜单中找到）
 
-2. 配置用户名和邮箱地址（如配置用户名为John Doe，邮箱为johndoe@doebrothers.com）
+2. 配置用户名和邮箱地址（如配置用户名为John Doe，邮箱为johndoe@doebrothers.com，邮箱为github注册邮箱）
 
     ![setting-username-and-email-address-in-git](http://guganeshan.com/blog/wp-content/uploads/2013/09/setting-username-and-email-address-in-git-guganeshan.com_.jpg)
 
@@ -48,16 +48,17 @@ tags:
 
 登录Github，新建一个公共密钥，将刚刚复制的密钥粘贴进去，如图
 
-![](http://images2015.cnblogs.com/blog/430523/201608/430523-20160831150855558-779365676.png)
+![](https://i.imgur.com/BBURFez.png)
 
-![](http://images2015.cnblogs.com/blog/430523/201608/430523-20160831150941590-953771592.png)
+![](https://i.imgur.com/ewXI1fV.png)
+
+![](https://i.imgur.com/IJdgFDP.png)
 
 ## 安装TortoiseGit
 
 1. 下载最新版的TortoiseGit → [下载地址](<http://code.google.com/p/tortoisegit/>)
 
 2.  在选择SSH客户端（Choose SSH client）的时候，选择“OpenSSH, Git default SSH Client”，如图
+![](http://guganeshan.com/blog/wp-content/uploads/2013/09/choose-ssh-client.jpg)
 
-   ![](http://guganeshan.com/blog/wp-content/uploads/2013/09/choose-ssh-client.jpg)
-
-   3. 点击“Finish”结束安装。
+3. 点击“Finish”结束安装。
