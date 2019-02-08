@@ -10,8 +10,19 @@ tags:
     - 人工智能
     - 深度学习
 ---
+<head>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            inlineMath: [['$','$']]
+            }
+        });
+    </script>
+</head>
 
-#1 导入所需的包
+# 1 导入所需的包
 
 <pre class="prettyprint lang-python">
 import numpy as np  
@@ -25,15 +36,15 @@ from lr_utils import load_dataset
 %matplotlib inline
 </pre>
 
->####包介绍
+>#### 包介绍
 >**numpy** is the fundamental package for scientific computing with Python.
 **h5py** is a common package to interact with a dataset that is stored on an H5 file.
 **matplotlib** is a famous library to plot graphs in Python.
 **PIL** and **scipy** are used here to test your model with your own picture at the end.
 **lr_utils **是压缩包内给的自定义函数，功能是导入数据集
 
-###PS：遇到的几个坑
-####坑1：PIL包不支持python3以上
+### PS：遇到的几个坑
+#### 坑1：PIL包不支持python3以上
 解决方案：安装PIL的分支Pillow
 
 安装完成后，使用from PIL import Image就引用使用库了。比如：
@@ -46,7 +57,7 @@ im.rotate(45).show()
 
 参考链接：[https://blog.csdn.net/dcz1994/article/details/71642979](https://blog.csdn.net/dcz1994/article/details/71642979)
 
-####坑2：`%matplotlib inline`在PyCharm中报错
+#### 坑2：`%matplotlib inline`在PyCharm中报错
 解决方案：使用`from matplotlib import pyplot as plt`
 
 故导入包的代码可改为以下代码
@@ -63,20 +74,20 @@ from lr_utils import load_dataset
 
 参考链接：[https://blog.csdn.net/xinluqishi123/article/details/63523531](https://blog.csdn.net/xinluqishi123/article/details/63523531)
 
-#2 数据预处理
->####数据预处理的一般步骤
+# 2 数据预处理
+>#### 数据预处理的一般步骤
 >- 弄清楚要处理的数据集的大小和形状
 >- 重塑一些数据集的形状
 >- “标准化”数据
 
-##具体步骤如下
+## 具体步骤如下
 
 <pre class="prettyprint lang-python">
 # Loading the data (cat/non-cat)
 train_set_x_orig, train_set_y, test_set_x_orig, test_set_y, classes = load_dataset()
 </pre>
 
-####2.2 识别数据集的大小和形状
+#### 2.2 识别数据集的大小和形状
 
 <pre class="prettyprint lang-python">
 # Figure out the dimensions and shapes of the problem (m_train, m_test, num_px, ...)
@@ -85,7 +96,7 @@ m_test = test_set_x_orig.shape[0]
 num_px = train_set_x_orig.shape[1]
 </pre>
 
-####2.3 重塑一些数据的形状
+#### 2.3 重塑一些数据的形状
 
 <pre class="prettyprint lang-python">
 # Reshape the training and test examples
@@ -93,7 +104,7 @@ train_set_x_flatten = train_set_x_orig.reshape(train_set_x_orig.shape[0], -1).T
 test_set_x_flatten = test_set_x_orig.reshape(test_set_x_orig.shape[0], -1).T
 </pre>
 
-####2.4 “标准化”数据
+#### 2.4 “标准化”数据
 
 <pre class="prettyprint lang-python">
 # standardize our dataset.
@@ -101,7 +112,7 @@ train_set_x = train_set_x_flatten/255.
 test_set_x = test_set_x_flatten/255.
 </pre>
 
-#3 学习算法的一般体系结构
+# 3 学习算法的一般体系结构
 **Logistic Regression算法示意图如下：**
 ![Logistic Regression算法示意图](https://i.imgur.com/G08WJGS.png)
 **Logistic Regression算法的数学表达式**
@@ -112,7 +123,7 @@ test_set_x = test_set_x_flatten/255.
 - 使用学习的参数在测试集上进行预测
 - 分析结果并得出结论
 
-#4 构建Logistic Regression算法的各个部分
+# 4 构建Logistic Regression算法的各个部分
 >构建一个神经网络的主要步骤如下：
 >1、定义模型的结构
 >2、初始化模型的参数
@@ -123,7 +134,7 @@ test_set_x = test_set_x_flatten/255.
 >
 >通常单独构建1-3并将它们集成到一个我们称之为`model()`的函数中。
 
-##4.1 sigmoid函数
+## 4.1 sigmoid函数
 $$ sigmoid(w^{T}x+b)=\frac{1}{1+e^{-(w^{T}x+b)}} $$
 
 <pre class="prettyprint lang-python">
@@ -143,7 +154,7 @@ def sigmoid(z):
     return s
 </pre>
 
-##4.2 初始化参数
+## 4.2 初始化参数
 
 将参数w和b都初始化为0
 
@@ -167,7 +178,7 @@ def initialize_with_zeros(dim):
     return w, b
 </pre>
 
-##4.3 前向传播和反向传播过程
+## 4.3 前向传播和反向传播过程
 正向传播过程：
 - 获取数据集X
 - 计算$$ A=σ(w^{T} + b) = (a^{(0)},a^{(1)},...,a^{(m-1)},a^{(m)}) $$
@@ -215,7 +226,7 @@ def propagate(w, b, X, Y):
     return grads, cost
 </pre>
 
-##4.4 优化
+## 4.4 优化
 - 已对参数做了初始化操作
 - 已可进行成本函数和梯度的计算
 - 现在，使用梯度下降来更新参数
@@ -273,7 +284,7 @@ def optimize(w, b, X, Y, num_iterations, learning_rate, print_cost=False):
 </pre>
 
 
-##4.5 预测
+## 4.5 预测
 用已经训练好的参数w和b来预测数据集X，为其打上标签0或1
 预测计算的主要步骤如下：
 - 计算$$ \hat{Y}=A=\sigma(w^{T}X+b)  $$
@@ -311,7 +322,7 @@ def predict(w, b, X):
     return Y_prediction
 </pre>
 
-#5 将所有的函数整合到同一个模型中
+# 5 将所有的函数整合到同一个模型中
 
 <pre class="prettyprint lang-python">
 # GRADED FUNCTION: model
@@ -372,7 +383,7 @@ d = model(train_set_x, train_set_y, test_set_x, test_set_y, num_iterations = 200
 | :------------: | :-----------: |
 | 99.04306220095694 % | 70.0 % |
 
-#6 进一步分析
+# 6 进一步分析
 ## 选择学习率
 学习率α决定了更新参数的速度。如果学习率太大，我们可能会“超调”最佳值。同样，如果它太小，我们将需要经过较多次的迭代来收敛到最佳值。使用良好调整的学习率至关重要。
 
