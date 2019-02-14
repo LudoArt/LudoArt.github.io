@@ -20,6 +20,8 @@ tags:
             }
         });
     </script>
+	<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js">
+	</script>
 </head>
 
 # 1 导入所需的包
@@ -429,5 +431,6 @@ plt.show()
 
 
 >参考材料
->- http://www.wildml.com/2015/09/implementing-a-neural-network-from-scratch/
->- https://stats.stackexchange.com/questions/211436/why-do-we-normalize-images-by-subtracting-the-datasets-image-mean-and-not-the-c
+>- [http://www.wildml.com/2015/09/implementing-a-neural-network-from-scratch/](http://www.wildml.com/2015/09/implementing-a-neural-network-from-scratch/)  
+>
+>- [https://stats.stackexchange.com/questions/211436/why-do-we-normalize-images-by-subtracting-the-datasets-image-mean-and-not-the-c](https://stats.stackexchange.com/questions/211436/why-do-we-normalize-images-by-subtracting-the-datasets-image-mean-and-not-the-c)  
