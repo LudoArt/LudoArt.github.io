@@ -1,8 +1,8 @@
 ---
 layout:     post
-title:      Logistic Regression with a Neural Network mindset
+title:      Planar data classification with one hidden layer
 subtitle:   null
-date:       2019-02-08
+date:       2019-02-13
 author:     LudoArt
 header-img: img/post-bg-ios9-web.jpg
 catalog: true
@@ -117,8 +117,6 @@ $$ z^{[2](i)}=W^{[2]}a^{(i)}+b^{[2](i)} $$
 
 $$ \hat{y}^{(i)}=a^{[2](i)}=\sigma(z^{[2](i)}) $$
 
-$$ =a^{[2](i)}=\sigma(z^{[2](i)}) $$
-
 $$ y^{(i)}_prediction=
 \begin{cases}
 1& \text{if a^{[2](i)}>0.5}\\
@@ -126,7 +124,7 @@ $$ y^{(i)}_prediction=
 \end{cases} $$
 
 成本 *J* 为：
-$$ J=-\frac{1}{m}$\sum_{i=0}^m(y^{(i)}log(a^{[2](i)})+(1-y^{(i)})log(1-a^{[2](i)})) $$
+$$ J=-\frac{1}{m}\sum_{i=0}^m(y^{(i)}log(a^{[2](i)})+(1-y^{(i)})log(1-a^{[2](i)})) $$
 
 > **建立一个神经网络的通常方法：**
 > 1. 定义神经网络的结构（如输入单元的数量，隐藏单元的数量等）
@@ -319,9 +317,11 @@ def backward_propagation(parameters, cache, X, Y):
 
 ## 4.4 更新参数
 
-> 使用梯度下降来更新参数
+> 使用梯度下降来更新参数 
+> 
 > 一般梯度下降的规则：$$ \theta = \theta - \alpha \frac{∂J}{∂\theta} $$
 > 此处的$$ \alpha $$代表学习率，$$ \theta $$代表参数
+> 
 > 一个好的学习率和一个坏的学习率的表现可以如下图所示：
 > ![](https://i.imgur.com/kBB81DT.gif)
 > ![](https://i.imgur.com/lzfh0ff.gif)
@@ -369,14 +369,193 @@ def update_parameters(parameters, grads, learning_rate=1.2):
 ## 4.5 将以上三个步骤整合
 
 <pre class="prettyprint lang-python">
+# GRADED FUNCTION: nn_model
+def nn_model(X, Y, n_h, num_iterations=10000, print_cost=False):
+    """
+    Arguments:
+    X -- dataset of shape (2, number of examples)
+    Y -- labels of shape (1, number of examples)
+    n_h -- size of the hidden layer
+    num_iterations -- Number of iterations in gradient descent loop
+    print_cost -- if True, print the cost every 1000 iterations
+
+    Returns:
+    parameters -- parameters learnt by the model. They can then be used to predict.
+    """
+    np.random.seed(3)
+    n_x = layer_sizes(X, Y)[0]
+    n_y = layer_sizes(X, Y)[2]
+
+    # Initialize parameters, then retrieve W1, b1, W2, b2
+    # Inputs: "n_x, n_h, n_y". Outputs = "W1, b1, W2, b2, parameters".
+    parameters = initialize_parameters(n_x, n_h, n_y)
+    W1 = parameters["W1"]
+    b1 = parameters["b1"]
+    W2 = parameters["W2"]
+    b2 = parameters["b2"]
+
+    # Loop (gradient descent)
+    for i in range(0, num_iterations):
+        # Forward propagation. Inputs: "X, parameters". Outputs: "A2, cache".
+        A2, cache = forward_propagation(X, parameters)
+
+        # Cost function. Inputs: "A2, Y, parameters". Outputs: "cost".
+        cost = compute_cost(A2, Y, parameters)
+
+        # Backpropagation. Inputs: "parameters, cache, X, Y". Outputs: "grads".
+        grads = backward_propagation(parameters, cache, X, Y)
+
+        # Gradient descent parameter update. Inputs: "parameters, grads". Outputs: "parameters".
+        parameters = update_parameters(parameters, grads)
+
+        # Print the cost every 1000 iterations
+        if print_cost and i % 1000 == 0:
+            print("Cost after iteration %i: %f" % (i, cost))
+
+    return parameters
 </pre>
 
 ## 4.6 预测
 
+> **使用前向传播来预测结果**
+> $$ predictions = y_{prediction} = 1{activation>0.5} = \begin{cases}
+1& \text{if activation>0.5}\\
+0& \text{otherwise}
+\end{cases} $$
+
 <pre class="prettyprint lang-python">
+# GRADED FUNCTION: predict
+def predict(parameters, X):
+    """
+    Using the learned parameters, predicts a class for each example in X
+
+    Arguments:
+    parameters -- python dictionary containing your parameters
+    X -- input data of size (n_x, m)
+
+    Returns
+    predictions -- vector of predictions of our model (red: 0 / blue: 1)
+    """
+    # Computes probabilities using forward propagation, and classifies to 0/1 using 0.5 as the threshold.
+    A2, cache = forward_propagation(X, parameters)
+    predictions = (A2 > 0.5)
+
+    return predictions
 </pre>
+
+**尝试使用刚建立的模型在数据集上学习参数，并打印结果：**
+
+<pre class="prettyprint lang-python">
+# Build a model with a n_h-dimensional hidden layer
+parameters = nn_model(X, Y, n_h = 4, num_iterations = 10000, print_cost=True)
+
+# Plot the decision boundary
+plot_decision_boundary(lambda x: predict(parameters, x.T), X, Y)
+plt.title("Decision Boundary for hidden layer size " + str(4))
+
+# Print accuracy
+predictions = predict(parameters, X)
+print ('Accuracy: %d' % float((np.dot(Y,predictions.T) + np.dot(1-Y,1-predictions.T))/float(Y.size)*100) + '%')
+plt.show()
+</pre>
+
+**输出结果如下：**
+Cost after iteration 9000: 0.218633
+Accuracy: 90%
+![](https://i.imgur.com/PD7K8nq.png)
+**可以发现，带有一层隐藏层的神经网络要比没有隐藏层的简单线性回归神经网络的结果要好许多，它甚至可以学习非线性的决策边缘。**
 
 ## 4.7 调整隐藏层的大小
 
+**运行以下代码。观察模型对各种隐藏层大小的不同行为。**
+
 <pre class="prettyprint lang-python">
+plt.figure(figsize=(16, 32))
+hidden_layer_sizes = [1, 2, 3, 4, 5, 10, 20]
+for i, n_h in enumerate(hidden_layer_sizes):
+    plt.subplot(5, 2, i+1)
+    plt.title('Hidden Layer of size %d' % n_h)
+    parameters = nn_model(X, Y, n_h, num_iterations = 5000)
+    plot_decision_boundary(lambda x: predict(parameters, x.T), X, Y)
+    predictions = predict(parameters, X)
+    accuracy = float((np.dot(Y,predictions.T) + np.dot(1-Y,1-predictions.T))/float(Y.size)*100)
+    print ("Accuracy for {} hidden units: {} %".format(n_h, accuracy))
+
+plt.show()
 </pre>
+
+**输出结果如下：**
+Accuracy for 1 hidden units: 67.5 %
+Accuracy for 2 hidden units: 67.25 %
+Accuracy for 3 hidden units: 90.75 %
+Accuracy for 4 hidden units: 90.5 %
+Accuracy for 5 hidden units: 91.25 %
+Accuracy for 10 hidden units: 90.25 %
+Accuracy for 20 hidden units: 90.5 %
+![](https://i.imgur.com/cAOV5ka.png)
+
+> **注：**
+> - 具有较多隐藏单元的模型能够更好地适应训练集，直到最终模型过度拟合数据。
+> - 最好的隐藏层大小似乎在n_h = 5附近。实际上，这里的值似乎很好地适合数据而不会引起明显的过度拟合。
+> - 正则化允许使用非常大的模型（例如n_h = 50）而不会过度拟合。
+
+# 5 在其他数据集上运行
+
+**数据集代码如下：**
+<pre class="prettyprint lang-python">
+# Datasets
+noisy_circles, noisy_moons, blobs, gaussian_quantiles, no_structure = load_extra_datasets()
+
+datasets = {"noisy_circles": noisy_circles,
+            "noisy_moons": noisy_moons,
+            "blobs": blobs,
+            "gaussian_quantiles": gaussian_quantiles}
+
+dataset = "noisy_moons"
+
+X, Y = datasets[dataset]
+X, Y = X.T, Y.reshape(1, Y.shape[0])
+
+# make blobs binary
+if dataset == "blobs":
+    Y = Y % 2
+
+# Visualize the data
+plt.scatter(X[0, :], X[1, :], c=np.squeeze(Y), s=40, cmap=plt.cm.Spectral)
+</pre>
+
+**数据集如图所示：**
+![](https://i.imgur.com/0sG6TaS.png)
+
+**运行以下代码查看效果：**
+
+<pre class="prettyprint lang-python">
+plt.figure(figsize=(16, 32))
+hidden_layer_sizes = [1, 2, 3, 4, 5, 10, 20]
+for i, n_h in enumerate(hidden_layer_sizes):
+    plt.subplot(5, 2, i+1)
+    plt.title('Hidden Layer of size %d' % n_h)
+    parameters = nn_model(X, Y, n_h, num_iterations = 5000)
+    plot_decision_boundary(lambda x: predict(parameters, x.T), X, Y)
+    predictions = predict(parameters, X)
+    accuracy = float((np.dot(Y,predictions.T) + np.dot(1-Y,1-predictions.T))/float(Y.size)*100)
+    print ("Accuracy for {} hidden units: {} %".format(n_h, accuracy))
+
+plt.show()
+</pre>
+
+**输出结果如下：**
+Accuracy for 1 hidden units: 86.0 %
+Accuracy for 2 hidden units: 88.0 %
+Accuracy for 3 hidden units: 97.0 %
+Accuracy for 4 hidden units: 96.5 %
+Accuracy for 5 hidden units: 96.0 %
+Accuracy for 10 hidden units: 86.0 %
+Accuracy for 20 hidden units: 86.0 %
+![](https://i.imgur.com/zfNsYmd.png)
+
+**注：可以看到当隐藏单元到达10个的时候，发生了过度拟合。**
+
+> **参考资料：**
+> [http://scs.ryerson.ca/~aharley/neural-networks/](http://scs.ryerson.ca/~aharley/neural-networks/)
+> [http://cs231n.github.io/neural-networks-case-study/](http://cs231n.github.io/neural-networks-case-study/)
