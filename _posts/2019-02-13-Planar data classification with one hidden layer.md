@@ -93,7 +93,7 @@ print('Accuracy of logistic regression: %d ' % float((np.dot(Y,LR_predictions) +
 plt.show()
 </pre>
 
-**输出结果如下：**
+**输出结果如下：**  
 Accuracy of logistic regression: 47 % (percentage of correctly labelled datapoints)
 
 ![Simple Logistic Regression](https://i.imgur.com/enhWLoc.png)
@@ -461,7 +461,7 @@ print ('Accuracy: %d' % float((np.dot(Y,predictions.T) + np.dot(1-Y,1-prediction
 plt.show()
 </pre>
 
-**输出结果如下：**
+**输出结果如下：**  
 Cost after iteration 9000: 0.218633  
 Accuracy: 90%
 ![](https://i.imgur.com/PD7K8nq.png)
@@ -486,7 +486,7 @@ for i, n_h in enumerate(hidden_layer_sizes):
 plt.show()
 </pre>
 
-**输出结果如下：**
+**输出结果如下：**  
 Accuracy for 1 hidden units: 67.5 %  
 Accuracy for 2 hidden units: 67.25 %  
 Accuracy for 3 hidden units: 90.75 %  
@@ -546,25 +546,20 @@ for i, n_h in enumerate(hidden_layer_sizes):
 plt.show()
 </pre>
 
-**输出结果如下：**
-Accuracy for 1 hidden units: 86.0 %
-
-Accuracy for 2 hidden units: 88.0 %
-
-Accuracy for 3 hidden units: 97.0 %
-
-Accuracy for 4 hidden units: 96.5 %
-
-Accuracy for 5 hidden units: 96.0 %
-
-Accuracy for 10 hidden units: 86.0 %
-
-Accuracy for 20 hidden units: 86.0 %
+**输出结果如下：**  
+Accuracy for 1 hidden units: 86.0 %  
+Accuracy for 2 hidden units: 88.0 %  
+Accuracy for 3 hidden units: 97.0 %  
+Accuracy for 4 hidden units: 96.5 %  
+Accuracy for 5 hidden units: 96.0 %  
+Accuracy for 10 hidden units: 86.0 %  
+Accuracy for 20 hidden units: 86.0 %  
 
 ![](https://i.imgur.com/zfNsYmd.png)
 
 **注：可以看到当隐藏单元到达10个的时候，发生了过度拟合。**
 
 > **参考资料：**
-> [http://scs.ryerson.ca/~aharley/neural-networks/](http://scs.ryerson.ca/~aharley/neural-networks/)
+> [http://scs.ryerson.ca/~aharley/neural-networks/](http://scs.ryerson.ca/~aharley/neural-networks/)  
+> 
 > [http://cs231n.github.io/neural-networks-case-study/](http://cs231n.github.io/neural-networks-case-study/)
