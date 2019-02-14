@@ -196,10 +196,12 @@ def initialize_parameters(n_x, n_h, n_y):
     return parameters
 </pre>
 
-> **Q1：为什么初始化 *W1* 和 *W2* 的时候要乘 *0.01* ？**
+> **Q1：为什么初始化 *W1* 和 *W2* 的时候要乘 *0.01* ？**  
+> 
 > **A：因为后续要利用梯度更新参数，当 *W1* 和 *W2* 较小的时候，梯度较大，更新参数的速度较快**
 > 
-> **Q2：为什么要初始化 *W1* 和 *W2* 为随机值？**
+> **Q2：为什么要初始化 *W1* 和 *W2* 为随机值？**  
+> 
 > **A：若将 *W1* 和 *W2* 全部初始化为0，则在计算隐藏单元时，每个隐藏单元将会进行相同的计算，那么设置隐藏层则变得没有意义**
 
 ## 4.3 循环
@@ -418,7 +420,7 @@ def nn_model(X, Y, n_h, num_iterations=10000, print_cost=False):
 ## 4.6 预测
 
 > **使用前向传播来预测结果**
-> $$ predictions = y_{prediction} = 1{activation>0.5} = \begin{cases}
+> $$ predictions = y_{prediction} = \begin{cases}
 1& \text{if activation>0.5}\\
 0& \text{otherwise}
 \end{cases} $$
@@ -460,7 +462,7 @@ plt.show()
 </pre>
 
 **输出结果如下：**
-Cost after iteration 9000: 0.218633
+Cost after iteration 9000: 0.218633  
 Accuracy: 90%
 ![](https://i.imgur.com/PD7K8nq.png)
 **可以发现，带有一层隐藏层的神经网络要比没有隐藏层的简单线性回归神经网络的结果要好许多，它甚至可以学习非线性的决策边缘。**
@@ -485,13 +487,13 @@ plt.show()
 </pre>
 
 **输出结果如下：**
-Accuracy for 1 hidden units: 67.5 %
-Accuracy for 2 hidden units: 67.25 %
-Accuracy for 3 hidden units: 90.75 %
-Accuracy for 4 hidden units: 90.5 %
-Accuracy for 5 hidden units: 91.25 %
-Accuracy for 10 hidden units: 90.25 %
-Accuracy for 20 hidden units: 90.5 %
+Accuracy for 1 hidden units: 67.5 %  
+Accuracy for 2 hidden units: 67.25 %  
+Accuracy for 3 hidden units: 90.75 %  
+Accuracy for 4 hidden units: 90.5 %  
+Accuracy for 5 hidden units: 91.25 %  
+Accuracy for 10 hidden units: 90.25 %  
+Accuracy for 20 hidden units: 90.5 %  
 ![](https://i.imgur.com/cAOV5ka.png)
 
 > **注：**
@@ -546,12 +548,19 @@ plt.show()
 
 **输出结果如下：**
 Accuracy for 1 hidden units: 86.0 %
+
 Accuracy for 2 hidden units: 88.0 %
+
 Accuracy for 3 hidden units: 97.0 %
+
 Accuracy for 4 hidden units: 96.5 %
+
 Accuracy for 5 hidden units: 96.0 %
+
 Accuracy for 10 hidden units: 86.0 %
+
 Accuracy for 20 hidden units: 86.0 %
+
 ![](https://i.imgur.com/zfNsYmd.png)
 
 **注：可以看到当隐藏单元到达10个的时候，发生了过度拟合。**
