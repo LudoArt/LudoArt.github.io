@@ -93,7 +93,7 @@ test_x = test_x_flatten/255.
 
 ## 3.3 建立模型的一般方法
 
-> 构建模型的一般方法：
+> **构建模型的一般方法：**
 > 
 > 1. 初始化参数/定义超参数
 > 2. 循环:
@@ -221,7 +221,7 @@ def two_layer_model(X, Y, layers_dims, learning_rate=0.0075, num_iterations=3000
 parameters = two_layer_model(train_x, train_y, layers_dims = (n_x, n_h, n_y), num_iterations = 2500, print_cost=True)
 </pre>
 
-**运行结果如下：**
+**运行结果如下：**  
 Cost after iteration 0: 0.693049735659989  
 Cost after iteration 100: 0.6464320953428849  
 Cost after iteration 200: 0.6325140647912678  
@@ -345,7 +345,7 @@ def L_layer_model(X, Y, layers_dims, learning_rate=0.0075, num_iterations=3000, 
     return parameters
 </pre>
 
-**使用以下的代码来训练参数（此时相当于一个5层的神经网络）**
+**使用以下的代码来训练参数（此时相当于一个5层的神经网络）：**
 
 <pre class="prettyprint lang-python">
 parameters = L_layer_model(train_x, train_y, layers_dims, num_iterations = 2500, print_cost = True)
@@ -416,4 +416,4 @@ print_mislabeled_images(classes, test_x, test_y, pred_test)
 
 > **参考资料：**  
 > 
-> **用于自动重新加载外部模块:**[http://stackoverflow.com/questions/1907993/autoreload-of-modules-in-ipython](http://stackoverflow.com/questions/1907993/autoreload-of-modules-in-ipython)
+> 用于自动重新加载外部模块:[http://stackoverflow.com/questions/1907993/autoreload-of-modules-in-ipython](http://stackoverflow.com/questions/1907993/autoreload-of-modules-in-ipython)
