@@ -70,7 +70,7 @@ np.random.seed(1)
 
 ## 3.1 2层神经网络
 
-**该模型的结构是： LINEAR -> RELU -> LINEAR -> SIGMOID **
+> **该模型的结构是： LINEAR -> RELU -> LINEAR -> SIGMOID**
 
 <pre class="prettyprint lang-python">
 # GRADED FUNCTION: initialize_parameters
@@ -110,7 +110,7 @@ def initialize_parameters(n_x, n_h, n_y):
 
 ## 3.2 L层神经网络
 
-> **该模型的结构是： [LINEAR -> RELU] × (L-1) -> LINEAR -> SIGMOID **
+> **该模型的结构是： [LINEAR -> RELU] × (L-1) -> LINEAR -> SIGMOID**
  
 
 <pre class="prettyprint lang-python">
