@@ -173,10 +173,10 @@ plot_decision_boundary(lambda x: predict_dec(parameters, x.T), train_X, train_Y)
 #### 3.1 正向传播
 
 **非正则化计算损失：**  
-$$ J = -\frac{1}{m} \sum\limits_{i = 1}^{m} \large{(}\small  y^{(i)}\log\left(a^{[L](i)}\right) + (1-y^{(i)})\log\left(1- a^{[L](i)}\right) \large{)} \tag{1} $$  
+$$ J = -\frac{1}{m} \sum\limits_{i = 1}^{m} \large{(}\small  y^{(i)}\log\left(a^{[L](i)}\right) + (1-y^{(i)})\log\left(1- a^{[L](i)}\right) \large{)} $$  
   
 **L2正则化计算损失：**  
-$$ J_{regularized} = \small \underbrace{-\frac{1}{m} \sum\limits_{i = 1}^{m} \large{(}\small y^{(i)}\log\left(a^{[L](i)}\right) + (1-y^{(i)})\log\left(1- a^{[L](i)}\right) \large{)} }_\text{cross-entropy cost} + \underbrace{\frac{1}{m} \frac{\lambda}{2} \sum\limits_l\sum\limits_k\sum\limits_j W_{k,j}^{[l]2} }_\text{L2 regularization cost} \tag{2} $$
+$$ J_{regularized} = \small \underbrace{-\frac{1}{m} \sum\limits_{i = 1}^{m} \large{(}\small y^{(i)}\log\left(a^{[L](i)}\right) + (1-y^{(i)})\log\left(1- a^{[L](i)}\right) \large{)} }_\text{cross-entropy cost} + \underbrace{\frac{1}{m} \frac{\lambda}{2} \sum\limits_l\sum\limits_k\sum\limits_j W_{k,j}^{[l]2} }_\text{L2 regularization cost} $$
 
 <pre class="prettyprint lang-python">
 # GRADED FUNCTION: compute_cost_with_regularization
@@ -209,6 +209,7 @@ def compute_cost_with_regularization(A3, Y, parameters, lambd):
 #### 3.2 反向传播
 
 **在计算梯度的时候，须加上正则化项的梯度：**  
+  
 $$ \frac{d}{dW} ( \frac{1}{2}\frac{\lambda}{m}  W^2) = \frac{\lambda}{m} W $$
 
 <pre class="prettyprint lang-python">
@@ -309,7 +310,7 @@ plot_decision_boundary(lambda x: predict_dec(parameters, x.T), train_X, train_Y)
 - 首先，创建一个和变量 $$ a^{[1]} $$ 一样维度的变量 $$ d^{[1]} $$ ， $$ d^{[1]} $$ 中的元素赋予0到1之间的随机值。对其向量化，即创建一个矩阵 $$ D^{[1]}=[d^{[1](1)}d^{[1](2)}...d^{[1](m)}] $$ ， $$ D^{[1]} $$ 与 $$ A^{[1]} $$ 维度相同；
 - 其次，对 $$ D^{[1]} $$ 中的每个元素进行阈值处理，使其以 `1-keep_prob` 的概率为0，以 `keep_prob` 的概率为1；
 - 再次，使 $$ A^{[1]}=A^{[1]}*D^{[1]} $$ 。可以将 $$ D^{[1]} $$ 当做一个遮罩，当它乘以别的矩阵的时候，它会关闭一些值。
-- 最后， $$ A^{[1]}=A^{[1]}/keep_prob $$ ]。通过这样做，您可以确保成本的结果仍然具有与不使用Dropout时相同的预期值。（这种技术也称为反向丢失。）
+- 最后， $$ A^{[1]}=A^{[1]} $$/keep_prob 。通过这样做，您可以确保成本的结果仍然具有与不使用Dropout时相同的预期值。（这种技术也称为反向丢失。）
 
 <pre class="prettyprint lang-python">
 # GRADED FUNCTION: forward_propagation_with_dropout
