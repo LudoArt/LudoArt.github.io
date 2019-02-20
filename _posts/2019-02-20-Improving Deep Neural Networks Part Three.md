@@ -37,7 +37,7 @@ from gc_utils import sigmoid, relu, dictionary_to_vector, vector_to_dictionary, 
 
 # 2 梯度校验是如何实现的
 
-反向传播中计算梯度 $$ \frac{\partial J}{\partial \theta} $$ 此处的 $$ \theta $$ 代表模型的参数， $$ J $$ 是成本函数。    
+反向传播中计算梯度 $$ \frac{\partial J}{\partial \theta} $$ ,此处的 $$ \theta $$ 代表模型的参数， $$ J $$ 是成本函数。    
 
 导数（或者说梯度）的定义如下：  
 
@@ -94,11 +94,11 @@ def backward_propagation(x, theta):
 
 > 步骤如下：
 > - 计算 "gradapprox" ：
->   - $$ \theta^{+} = \theta + \varepsilon $$
->   - $$ \theta^{-} = \theta - \varepsilon $$
->   - $$ J^{+} = J(\theta^{+}) $$
->   - $$ J^{-} = J(\theta^{-}) $$
->   - $$ gradapprox = \frac{J^{+} - J^{-}}{2  \varepsilon} $$
+>   - $ \theta^{+} = \theta + \varepsilon $
+>   - $ \theta^{-} = \theta - \varepsilon $
+>   - $ J^{+} = J(\theta^{+}) $
+>   - $ J^{-} = J(\theta^{-}) $
+>   - $ gradapprox = \frac{J^{+} - J^{-}}{2  \varepsilon} $
 > - 使用反向传播计算梯度，将计算的梯度存在变量 "grad" 中。
 > - 使用以下公式计算 "gradapprox" 和 "grad" 之间的相对差异：  
 >   
