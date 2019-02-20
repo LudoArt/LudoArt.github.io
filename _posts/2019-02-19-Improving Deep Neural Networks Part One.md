@@ -2,7 +2,7 @@
 layout:     post
 title:      Improving Deep Neural Networks Part One
 subtitle:   null
-date:       2019-02-17
+date:       2019-02-19
 author:     LudoArt
 header-img: img/post-bg-ios9-web.jpg
 catalog: true
