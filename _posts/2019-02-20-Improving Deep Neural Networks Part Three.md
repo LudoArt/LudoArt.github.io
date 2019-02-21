@@ -157,6 +157,11 @@ difference = 2.919335883291695e-10
 
 # 4 N维的梯度校验
 
+N维线性模型如下图所示（ *LINEAR -> RELU -> LINEAR -> RELU -> LINEAR -> SIGMOID* ）：
+
+![](https://i.imgur.com/6aNpUiF.png)
+
+
 #### 4.1 前向传播与反向传播过程
 
 <pre class="prettyprint lang-python">
@@ -245,6 +250,27 @@ def backward_propagation_n(X, Y, cache):
 
 #### 4.2 梯度校验
 
+同样的，还是需要比较 "gradapprox" 和 "grad" 之间的相对差异。计算 "gradapprox" 的公式如下：  
+
+$$ \frac{\partial J}{\partial \theta} = \lim_{\varepsilon \to 0} \frac{J(\theta + \varepsilon) - J(\theta - \varepsilon)}{2 \varepsilon} $$  
+
+不同的是，此时的 $ \theta $ 不再是一个标量，而是一个 `dictionary` 类型的变量 `parameters` 。使用函数 `dictionary_to_vector()` 将变量 `parameters` 转换为一个向量 `values` ，反函数 `vector_to_dictionary` ，可以将 `values` 转换回 `parameters` 。如下图所示。
+
+![](https://i.imgur.com/7acbKS3.png)
+
+梯度计算的步骤如下：
+
+For each i in num_parameters:
+- 计算 `J_plus[i]`:
+    1. 使用 `np.copy(parameters_values)` 初始化 $ \theta^{+} $ 
+    2. 令 $ \theta^{+}_i $ 为 $ \theta^{+}_i + \varepsilon $
+    3. 使用 `forward_propagation_n(x, y, vector_to_dictionary(`$ \theta^{+} $ `))` 计算 $ J^{+}_i $     
+- 计算 `J_minus[i]`: 使用 $\theta^{-}$ 做与上面步骤相似的操作
+- 计算 $ gradapprox[i] = \frac{J^{+}_i - J^{-}_i}{2 \varepsilon} $
+
+接下来便可以使用以下公式来计算 "gradapprox" 和 "grad" 之间的相对差异：  
+$$ difference = \frac {\| grad - gradapprox \|_2}{\| grad \|_2 + \| gradapprox \|_2 } $$
+
 <pre class="prettyprint lang-python">
 # GRADED FUNCTION: gradient_check_n
 def gradient_check_n(parameters, gradients, X, Y, epsilon = 1e-7):
@@ -315,6 +341,8 @@ There is a mistake in the backward propagation! difference = 0.2850931566540251
 
 #### 4.3 反向传播中的bug修复
 
+通过上面的梯度校验，发现反向传播过程中有计算错误，修改其错误代码如下：
+
 <pre class="prettyprint lang-python">
 # dW2 = 1./m * np.dot(dZ2, A1.T) * 2 有误的
 dW2 = 1./m * np.dot(dZ2, A1.T) # 修改的
@@ -325,6 +353,6 @@ db1 = 1./m * np.sum(dZ1, axis=1, keepdims = True) # 修改的
 
 # 5 总结
 
-
-
-
+> - 梯度校验是验证 `grads` *（由反向传播计算得出）* 与 `gradapprox` *（由前向传播计算得出）* 之间的接近程度。
+> - 梯度校验很慢，因此不可每次训练迭代中都运行它。通常只使用它以确保代码是的正确性，然后将其关闭。
+> - 梯度校验不适用于Dropout。通常在没有Dropout的情况下运行梯度校验算法，以确保反向传播过程的计算无误，然后再添加Dropout技术。
