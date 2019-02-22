@@ -39,15 +39,15 @@ from lr_utils import load_dataset
 </pre>
 
 
->#### 包介绍
+> **包介绍**
 >- **numpy** is the fundamental package for scientific computing with Python.
 >- **h5py** is a common package to interact with a dataset that is stored on an H5 file.
 >- **matplotlib** is a famous library to plot graphs in Python.
 >- **PIL** and **scipy** are used here to test your model with your own picture at the end.
 >- **lr_utils**是压缩包内给的自定义函数，功能是导入数据集
 
-### PS：遇到的几个坑
-#### 坑1：PIL包不支持python3以上
+**PS：遇到的几个坑**
+**坑1：PIL包不支持python3以上**
 解决方案：安装PIL的分支Pillow
 
 安装完成后，使用from PIL import Image就引用使用库了。比如：
@@ -60,7 +60,7 @@ im.rotate(45).show()
 
 参考链接：[https://blog.csdn.net/dcz1994/article/details/71642979](https://blog.csdn.net/dcz1994/article/details/71642979)
 
-#### 坑2：`%matplotlib inline`在PyCharm中报错
+**坑2：`%matplotlib inline`在PyCharm中报错**
 解决方案：使用`from matplotlib import pyplot as plt`
 
 故导入包的代码可改为以下代码
@@ -78,19 +78,19 @@ from lr_utils import load_dataset
 参考链接：[https://blog.csdn.net/xinluqishi123/article/details/63523531](https://blog.csdn.net/xinluqishi123/article/details/63523531)
 
 # 2 数据预处理
->#### 数据预处理的一般步骤
+> **数据预处理的一般步骤**
 >- 弄清楚要处理的数据集的大小和形状
 >- 重塑一些数据集的形状
 >- “标准化”数据
 
-## 具体步骤如下
+**具体步骤如下**
 
 <pre class="prettyprint lang-python">
 # Loading the data (cat/non-cat)
 train_set_x_orig, train_set_y, test_set_x_orig, test_set_y, classes = load_dataset()
 </pre>
 
-#### 2.2 识别数据集的大小和形状
+## 2.1 识别数据集的大小和形状
 
 <pre class="prettyprint lang-python">
 # Figure out the dimensions and shapes of the problem (m_train, m_test, num_px, ...)
@@ -99,7 +99,7 @@ m_test = test_set_x_orig.shape[0]
 num_px = train_set_x_orig.shape[1]
 </pre>
 
-#### 2.3 重塑一些数据的形状
+## 2.2 重塑一些数据的形状
 
 <pre class="prettyprint lang-python">
 # Reshape the training and test examples
@@ -107,7 +107,7 @@ train_set_x_flatten = train_set_x_orig.reshape(train_set_x_orig.shape[0], -1).T
 test_set_x_flatten = test_set_x_orig.reshape(test_set_x_orig.shape[0], -1).T
 </pre>
 
-#### 2.4 “标准化”数据
+## 2.3 “标准化”数据
 
 <pre class="prettyprint lang-python">
 # standardize our dataset.
