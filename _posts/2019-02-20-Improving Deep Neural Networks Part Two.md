@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Improving Deep Neural Networks Part Two
-subtitle:   null
+subtitle:   Regularization
 date:       2019-02-20
 author:     LudoArt
 header-img: img/post-bg-ios9-web.jpg

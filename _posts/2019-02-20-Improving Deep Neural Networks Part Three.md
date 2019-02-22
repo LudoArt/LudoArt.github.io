@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Improving Deep Neural Networks Part Three
-subtitle:   null
+subtitle:   Gradient Checking
 date:       2019-02-20
 author:     LudoArt
 header-img: img/post-bg-ios9-web.jpg
