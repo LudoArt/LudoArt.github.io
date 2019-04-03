@@ -338,9 +338,9 @@ int main(){
 >
 > 每一个有虚函数的类（或有虚函数的类的派生类）都有一个**虚函数表**，该类的**任何对象**中都放着虚函数表的指针。虚函数表中列出了该类的虚函数地址。**多出来的4个字节就是用来存放虚函数表的地址。**如下图所示：
 
-![class_Base](../img/class_Base.png)
+![class_Base](http://wx2.sinaimg.cn/large/868d8571ly1g1pkvqrrgzj20yk0h3dl4.jpg)
 
-![class_Derived](../img/class_Derived.png)
+![class_Derived](http://wx1.sinaimg.cn/large/868d8571ly1g1pkwi23flj20za0m0dlt.jpg)
 
 > 多态的函数调用语句被编译成一系列根据基类指针所指向的（或基类引用所引用的）对象中存放的虚函数表的地址，在虚函数表中查找虚函数地址，并调用虚函数的指令。
 >
