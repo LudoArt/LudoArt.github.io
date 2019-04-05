@@ -95,12 +95,16 @@ int main(){
     E * pe = &e;
     
     pa->Print(); //a.Print()被调用，输出：A::Print
+    
     pa = pb;
     pa->Print(); //b.Print()被调用，输出：B::Print
+    
     pa = pd;
     pa->Print(); //d.Print()被调用，输出：D::Print
+    
     pa = pe;
     pa->Print(); //e.Print()被调用，输出：E::Print
+    
     return 0;
 }
 ```
@@ -109,6 +113,7 @@ int main(){
 
 ```c++
 //基类CCreature
+
 class CCreature{
     protected:
     int m_nLifeValue,m_nPower;
@@ -118,6 +123,7 @@ class CCreature{
     virtual void FightBack(CCreature * pCreature) {}
 };
 //派生类 CDragon
+
 class CDragon{
     public:
     virtual void Attack(CCreature * pCreature) {}
@@ -126,16 +132,22 @@ class CDragon{
 };
 void CDragon::Attack(CCreature * pCreature) {
     //表现攻击动作的代码
+    
     p->Hurted(m_nPower); //多态
+    
     p->FightBack(this); //多态
+    
 }
 void CDragon::Hurted(int nPower) {
     //表现受伤动作的代码
+    
     m_nLifeValue -= nPower；
 }
 void CDragon::FightBack(CCreature * pCreature) {
      //表现反击动作的代码
+    
     p->Hurted(m_nPower/2); //多态
+    
 }
 ```
 
@@ -147,6 +159,7 @@ void CDragon::FightBack(CCreature * pCreature) {
 class CShape{
   public:
     virtual double Area() = 0; //纯虚函数
+    
     virtual void PrintInfo() = 0;
 };
 
@@ -195,10 +208,14 @@ CShape * pShapes[100];
 int MyCompare(const void * s1, const void * s2){
     double a1, a2;
     CShape ** p1; //s1，s2是void*，不可写“*s1”来取得s1指向的内容
+    
     CShape ** p2;
     p1 = (CShape **) s1; //s1，s2指向pShapes数组中的元素，数组元素的类型是CShape *
+    
     p2 = (CShape **) s2; //故p1，p2都是指向指针的指针，类型为CShape **
+    
     a1 = (*p1)->Area(); //*p1的类型是CShape *，是基类指针，故此句为多态
+    
     a2 = (*p2)->Area();
     if(a1 < a2)
         return -1;
@@ -250,6 +267,7 @@ int main(){
 class Base{
   public:
     void fun1() { this->fun2(); } //this是基类指针，fun2是虚函数，所以是多态
+    
     virtual void fun2() { cout << "Base::fun2()" << endl; }
 };
 
@@ -262,6 +280,7 @@ int main(){
     Derived d;
     Base * pBase = & d;
     pBase->fun1(); //输出：Derived::fun2()
+    
     return 0;
 }
 ```
@@ -280,6 +299,7 @@ class myclass{
 class son:public myclass{
   public:
     void hello() { cout << "hello from son." << endl; } //派生类中和基类中虚函数同名同参数的函数，不加virtual也自动成为虚函数
+    
     son() { hello(); }
     ~son() { bye(); }
 };
@@ -297,14 +317,20 @@ int main(){
     son *pson;
     pson = &gson;
     pson->hello(); //多态
+    
     return 0;
 }
 
 //输出结果：
+
 //hello from son.
+
 //constructing grandson.
+
 //hello from grandson.
+
 //destructing grandson.
+
 //bye from myclass.
 ```
 
@@ -330,6 +356,7 @@ class Derived:public Base{
 int main(){
     Derived d;
     cout << sizeof(Base) << ", " << sizeof(Derived);//输出：8， 12
+    
     return 0;
 }
 ```
@@ -361,10 +388,14 @@ int main(){
     A a;
     A * pa = new B();
     pa->Func(); //输出：B::Func
+    
     long long * p1 = (long long *) & a; //将a的地址转换为一个long long型的指针
+    
     long long * p2 = (long long *) & pa;//将pa的地址转换为一个long long型的指针
+    
     * p2 = * p1;
     pa->Func(); //输出：A::Func
+    
     return 0;
 }
 ```
@@ -419,7 +450,9 @@ int main(){
     return 0;
 }
 //输出：
+
 //bye from grandson.
+
 //bye from son. 
 ```
 
@@ -433,6 +466,7 @@ class A{
     int a;
   public:
     virtual void Print() = 0; //纯虚函数
+    
     void fun() { cout << "fun"; }
 }
 ```
@@ -457,11 +491,14 @@ class A{
 class A{
   public:
     virtual void f() = 0; //纯虚函数
+    
     void g() { 
         this->f(); //ok
+        
     } 
     A() {
         f(); //错误
+        
     }
 };
 
@@ -477,6 +514,7 @@ int main(){
 }
 
 //输出：
+
 //B:f()
 ```
 
@@ -520,7 +558,9 @@ int main() {
 }
 
 //输出结果：
+
 //A::Fun 
+
 //C::Do 
 ```
 

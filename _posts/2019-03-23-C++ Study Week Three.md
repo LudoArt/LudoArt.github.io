@@ -57,6 +57,7 @@ class A{
 int main(){
     A * p = NULL;
     p -> Hello(); // error
+    
 }
 ```
 
@@ -80,11 +81,13 @@ class CRectangle
     private:
     int w, h;
     static int nTotalArea; //静态成员变量
+    
     static int nTotalNumber;
     public:
     CRectangle(int w_, int h_);
     ~CRectangle();
     static void PrintTotal(); //静态成员函数
+    
 };
 CRectangle::CRectangle(int w_, int h_){
     w = w_;
@@ -101,25 +104,34 @@ void CRectangle::PrintTotal(){
 }
 
 //必须在定义类的文件中对静态成员变量进行一次说明或初始化。否则编译能通过，链接不能通过
+
 int CRectangle::nTotalNumber = 0;
 int CRectangle::nTotalArea = 0;
 
 int main(){
     CRectangle r1(3, 3), r2(2, 2);
     cout << CRectangle::nTotalNumber; // error, nTotalNumber为私有变量
+    
     CRectangle::PrintTotal(); //2,13
+    
     r1.PrintTotal(); //2,13
+    
     return 0;
 }
 
 //访问静态成员
+
 // 1) 类名::成员名
+
 CRectangle::PrintTotal();
 // 2) 对象名.成员名
+
 CRectangle r; r.PrintTotal();
 // 3) 指针->成员名
+
 CRectangle *p = &r; p -> PrintTotal();
 // 4) 引用.成员名
+
 CRectangle & ref = r; int n = ref.nTotalNumber;
 ```
 
@@ -127,7 +139,9 @@ CRectangle & ref = r; int n = ref.nTotalNumber;
 
 ```c++
 //在使用CRectangle类时，有时会调用复制构造函数生成临时的隐藏的CRectangle对象，此时nTotalArea和nTotalNumber的值就会出错（临时对象生成时没有增加nTotalArea和nTotalNumber，但是在消亡时会调用析构函数减少nTotalArea和nTotalNumber）
+
 //解决方法：为CRectangle类写一个复制构造函数
+
 CRectangle::CRectangle(CRectangle & r){
     w = r.w;
     h = r.h;
@@ -142,6 +156,7 @@ CRectangle::CRectangle(CRectangle & r){
 
 ```c++
 //轮胎类
+
 class CTyre{
     private:
     int radius;
@@ -150,10 +165,12 @@ class CTyre{
     CTyre(int r, int w):radius(r), width(w) {}
 };
 //引擎类
+
 class CEngine{
     
 };
 //汽车类（封闭类）
+
 class CCar{
     private:
     int price;
@@ -164,7 +181,9 @@ class CCar{
 };
 
 //若CCar类不定义构造函数，则CCar car; 会编译出错
+
 //因为编译器不知道car.tyre该如何初始化
+
 //car.engine的初始化没问题
 ```
 
@@ -176,6 +195,7 @@ class CCar{
 
 ```c++
 //封闭类的复制构造函数
+
 class A{
     public:
     A() { cout << "default" << endl; }
@@ -188,9 +208,13 @@ int main(){
 }
 
 //输出结果：
+
 //default
+
 //copy
+
 //说明b2.a是用类A的复制构造函数初始化的
+
 //调用复制构造函数时的实参就是b1.a
 ```
 
@@ -204,19 +228,26 @@ class Sample{
     public:
     int value;
     void GetValue() const; //常量对象
+    
     void func() {};
     Sample() {}
 };
 void Sample::GetValue() const{//常量函数
+    
     value = 0; //error
+    
     func(); //error
+    
 }
 
 int main(){
     const Sample o;
     o.value = 100; //error 常量对象不可被修改
+    
     o.func(); //error 常量对象上不能执行非常量成员函数
+    
     o.GetValue(); //ok
+    
     return 0;
 }
 ```
@@ -249,18 +280,23 @@ int main(){
 
 ```c++
 //友元函数举例
+
 class CCar{
   private:
     int price;
     friend int MostExpensiveCar(CCar cars[], int total); //声明友元函数
+    
     friend void CDriver::ModifyCar(CCar * pCar); //声明友元函数
+    
 };
 
 class CDriver{
   public:
     //改装汽车
+    
     void ModifyCar(CCar * pCar){
         pCar -> price += 1000; //汽车改装后价值增加，访问了CCar类中的私有成员
+        
     }
 };
 
@@ -268,6 +304,7 @@ int MostExpensiveCar(CCar cars[], int total){
     int tmpMax = -1;
     for(int i = 0;i < total; ++i){
         if(cars[i].price > tmpMax) //访问了CCar类中的私有成员
+            
             tmpMax = cars[i].price; 
     }
     return tmpMax;
@@ -280,14 +317,17 @@ class CCar{
   private:
     int price;
     friend class CDriver； //声明友元类
+        
 };
 
 class CDriver{
   public:
     CCar myCar;
     //改装汽车
+    
     void ModifyCar(){
         myCar.price += 1000; //汽车改装后价值增加，访问了CCar类中的私有成员
+        
     }
 };
 ```
@@ -298,8 +338,11 @@ class CDriver{
 
 ```c++
 //本题考察“静态成员变量”该知识点，但继承和虚析构函数的含义尚不明朗
+
 //由题可知，似乎在子类对象生成的时候，也会调用父类对象的构造函数
+
 //若Animal类不定义成虚析构函数，最后delete c2;不能正确的将Cat::number减一
+
 class Animal {
 public:
 	static int number;
@@ -343,17 +386,21 @@ void print() {
 
 int main() {
 	print(); //0 animals in the zoo, 0 of them are dogs, 0 of them are cats
+    
 	Dog d1, d2;
 	Cat c1;
 	print(); //3 animals in the zoo, 2 of them are dogs, 1 of them are cats
+    
 	Dog* d3 = new Dog();
 	Animal* c2 = new Cat;
 	Cat* c3 = new Cat;
 	print(); //6 animals in the zoo, 3 of them are dogs, 3 of them are cats
+    
 	delete c3;
 	delete c2;
 	delete d3;
 	print(); //3 animals in the zoo, 2 of them are dogs, 1 of them are cats
+    
 }
 ```
 
@@ -365,6 +412,7 @@ struct A
 	int v;
 	A(int vv) :v(vv) { }
     //第一个const代表返回一个常量指针，第二个const代表这是一个常量函数
+    
 	const A * getPointer() const {
 		return this;
 	}
@@ -374,7 +422,9 @@ int main()
 {
 	const A a(10);
     //因为A是const类型的，所以函数getPointer()须是常量函数，否则无法调用
+    
     //又因为p是const A *类型的，所以函数getPointer()的返回值也必须是const A *类型
+    
 	const A * p = a.getPointer();
 	cout << p->v << endl;
 	return 0;
@@ -391,6 +441,7 @@ public:
 		val = k;
 	}
     //返回当前对象的一个引用
+    
 	A & GetObj() {
 		return *this;
 	}
@@ -402,7 +453,9 @@ int main()
 	cout << a.val << endl;
 	while(cin >> m >> n) {
         //将函数写在左边，变量写在右边，考虑函数的返回值是引用
+        
         //a.GetObj()返回对象a的引用，即a = m；，调用a的类型转换，将m自动转换成一个临时的A对象
+        
         a.GetObj() = m;
         cout << a.val << endl;
         a.GetObj() = A(n);

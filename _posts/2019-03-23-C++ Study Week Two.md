@@ -33,11 +33,13 @@ tags:
 
 ```C++
 // 矩形类
+
 class CRectangle
 {
     public:
     int w, h;
     int Area()； // 成员函数仅在此处声明
+        
     int Perimeter()；
     void Init(int w_, int h_)；
 }
@@ -98,24 +100,37 @@ Complex::Complex(double r, double i){
     real = r; imag = i;
 }
 Complex c1; // error, 缺少构造函数的参数
+
 Complex * pc = new Complex; // error, 缺少构造函数的参数
+
 Complex c1(2); // OK
+
 Complex c1(2, 4), c2(3, 5); // OK
+
 Complex * pc = new Complex(2, 4); // OK
+
 Complex c3(c1, c2); // OK
+
 ```
 
 ```C++
 // 构造函数在数组中的使用
+
 class Test{
     public:
     Test(int n){} //(1)
+    
     Test(int n, int m){} //(2)
+    
     Test(){} //(3)
+    
 };
 Test array1[3] = {1, Test(1,2)}; //三个元素分别用(1)，(2)，(3)初始化
+
 Test array2[3] = {Test(2,3), Test(1,2), 1}; //三个元素分别用(2)，(2)，(1)初始化
+
 Test * pArrar[3] = {new Test(4), new Test(1,2)}; //两个元素分别用(1)，(2)初始化
+
 ```
 
 ## 三、复制构造函数
@@ -130,14 +145,17 @@ Test * pArrar[3] = {new Test(4), new Test(1,2)}; //两个元素分别用(1)，(2
 
 ```C++
 // 系统自动生成默认复制构造函数
+
 class Complex{
     private:
     double real, imag;
 };
 Complex c1;   // 调用缺省无参构造函数
+
 Complex c2(c1); // 调用缺省的复制构造函数，将c2初始化成和c1一样
 
 // 自己定义复制构造函数
+
 class Complex{
     public:
     double real, imag;
@@ -149,17 +167,21 @@ class Complex{
     }
 };
 Complex c1;   // 调用缺省无参构造函数
+
 Complex c2(c1); // 调用自己定义的复制构造函数，输出"Copy Constructor Called."
+
 ```
 
 ### 3.2 复制构造函数起作用的三种情况
 
 ```c++
 // 1) 当用一个对象去初始化同类的另一个对象时
+
 Complex c2(c1);
 Complex c2 = c1; // 初始化语句，非赋值语句
 
 // 2) 若某函数有一个参数是类A的对象，那么该函数被调用时，类A的复制构造函数将被调用
+
 class A{
     public:
     A() {};
@@ -171,16 +193,19 @@ void Func(A a1){ }
 int main(){
     A a2;
     Func(a2); // 调用了类似了A a1 = a2;这样的功能，故将调用复制构造函数，输出"Copy Constructor Called."
+    
     return 0;
 }
 
 // 3) 如果函数的返回值是类A的对象，则函数返回时，A的复制构造函数将被调用
+
 A Func(){
     A b;
     return b;
 }
 int main(){
     Func(); // 输出"Copy Constructor Called."
+    
     return 0;
 }
 ```
@@ -202,6 +227,7 @@ class Complex{
     public:
     double real, imag;
     Complex(int i) {//类型转换构造函数
+        
         cout << "IntConstructor Called." << endl;
         real = i; imag = 0;
     }
@@ -214,7 +240,9 @@ int main()
     Complex c1(7, 8);
     Complex c2 = 12;
     c1 = 9; // 将9自动转换成一个临时的Complex对象
+    
     cout << c1.real << ", " << c1.imag << endl; // 输出 9, 0
+    
 }
 ```
 
@@ -235,13 +263,16 @@ class Srting{
         p = new char[10];
     }
     //析构函数
+    
     ~ String(){
         delete []p;
     }
 }
 int main(){
     String *s = new String[3]; //构造函数调用3次
+    
     delete [] s; //析构函数调用3次
+    
 }
 ```
 
@@ -277,20 +308,35 @@ int main(){
 }
 
 // 输出结果：
+
 // id = 1 constructed.
+
 // id = 4 constructed.
+
 // id = 6 constructed.
+
 // id = 6 destructed.
+
 // main
+
 // id = 5 constructed.
+
 // id = 5 destructed.
+
 // id = 2 constructed.
+
 // id = 3 constructed.
+
 // func
+
 // id = 3 destructed.
+
 // main ends
+
 // id = 6 destructed.
+
 // id = 2 destructed.
+
 // id = 1 destructed.
 ```
 
@@ -320,19 +366,30 @@ void PrintAndDouble(Sample o)
 int main()
 {
 	Sample a(5); //调用Sample(int i)
+    
 	Sample b = a; //调用Sample(const Sample & x)
+    
 	PrintAndDouble(b); //传入参数需进行复制，故调用Sample(const Sample & x)，输出9
+    
 	Sample c = 20; //调用Sample(int i)
+    
 	PrintAndDouble(c); //传入参数需进行复制，故调用Sample(const Sample & x)，输出22
+    
 	Sample d; //调用Sample()
+    
 	d = a; //不调用复制构造函数，故d.v = a.v
+    
 	cout << d.v; //输出5
+    
 	return 0;
 }
 
 //输出结果：
+
 //9
+
 //22
+
 //5
 ```
 

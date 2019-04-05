@@ -43,9 +43,12 @@ int n = 7;
 int & r = n;
 r = 4;
 cout << r;  // 4
+
 cout << n;  // 4
+
 n = 5;
 cout << r;  // 5
+
 ```
 
 > 注：
@@ -58,10 +61,14 @@ cout << r;  // 5
 int a = 7, b = 8;
 int & r1 = a;
 int & r2 = r1; // r2也引用a
+
 r2 = 10;
 cout << a;  // 10
+
 r1 = b;     // r1没有引用b
+
 cout << a;  // 8
+
 ```
 
 ### 1.2  引用的应用
@@ -85,6 +92,7 @@ int main()
 {
     SetValue() = 40;
     cout << n; // 40
+    
     return 0;
 }
 ```
@@ -95,7 +103,9 @@ int main()
 int n = 100;
 const int & r = n;
 r = 200; //编译出错
+
 n = 300; //没问题
+
 ```
 
 ## 二、const关键字
@@ -110,20 +120,28 @@ const int MAX_VAL = 23;
 
 ```C++
 // 不可以通过常量指针修改其指向的内容
+
 int n,m;
 const int * p = & n;
 * p = 5; // 编译出错
+
 n = 4; // ok
+
 p = & m; // ok，常量指针的指向可以改变
+
 ```
 
 ```C++
 // 不能把常量指针赋值给非常量指针，反之可以
+
 const int * p1;
 int * p2;
 p2 = p1; // 编译出错
+
 p2 = (int *) p1; // ok
+
 p1 = p2; // ok
+
 ```
 
 ## 三、动态内存分配
@@ -136,8 +154,11 @@ p1 = p2; // ok
 
 ``` C++
 // 内联函数：在函数定义前添加关键字“inline”
+
 // 优点：减少函数调用的开销
+
 // 缺点：程序体积增大
+
 inline int Max(int a, int b)
 {
     if(a > b) return a;
@@ -149,7 +170,9 @@ inline int Max(int a, int b)
 
 ```C++
 // 函数重载：一个或多个函数，名字相同，参数个数或类型不同 
+
 // 若名字相同，参数个数和类型也相同，返回值类型不同，称之为函数的重复定义
+
 int Max(double f1, double f2){}
 int Max(int n1, int n2){}
 int Max(int n1, int n2, int n3){}
@@ -160,8 +183,11 @@ int Max(int n1, int n2, int n3){}
 ```C++
 void func(int x1, int x2 = 2, int x3 = 3) { }
 func(10); // ok
+
 func(10, 8); // ok
+
 func(10, ,8); // error
+
 ```
 
 ## 五、类和对象的基本概念
@@ -172,12 +198,15 @@ func(10, ,8); // error
 
 ```C++
 // 矩形类
+
 class CRectangle
 {
     public:
     // 矩形的属性（宽和高）
+    
     int w, h;
     // 矩形的行为（求面积、求周长、初始化）
+    
     int Area(){
         return w * h;
     }
@@ -197,6 +226,7 @@ int main()
 {
     int w,h;
     CRectangle r; // r是一个对象
+    
     cin >> w >> h;
     r.Init(w, h);
     cout << r.Area() << endl;
@@ -209,10 +239,8 @@ int main()
 ### 6.1 难一点的swap
 
 ```C++
-#include <iostream>
-using namespace std;
-
 void swap(int *& a, int *& b) // 对int*类型的变量进行引用
+    
 {
 	int * tmp = a;
 	a = b;
@@ -232,9 +260,6 @@ int main()
 ### 6.2 神秘的数组初始化
 
 ```C++
-#include <iostream>
-using namespace std;
-
 int main()
 {
 	int * a[] = {NULL,NULL,new int,new int[6]}; 

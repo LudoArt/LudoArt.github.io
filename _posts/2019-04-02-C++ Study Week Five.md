@@ -47,11 +47,13 @@ class CStudent{
 };
 
 //派生类的写法是：类名:public 基类名
+
 class CUndergraduateStudent:public CStudnet{
   private:
     int nDepartment;
   public:
     bool IsThreeGood() { ... }; //覆盖
+    
     bool CanBaoYan() { ... };
 }
 
@@ -73,7 +75,9 @@ class CStudent{
   private:
     string name;
     string id;//学号
+    
     char gender//性别
+        
     int age;
   public:
     void PrintInfo();
@@ -82,20 +86,25 @@ class CStudent{
 }
 
 //本科生类，继承了CStudnet类
+
 class CUndergraduateStudent:public CStudnet{
   private:
     string department;//学生所属的系的名称
+    
   public:
     //给予保研资格
+    
     void QualifiedForBaoyan(){
         cout << "qualified for baoyan" << endl;
     }
     void PrintInfo(){
         CStudnet::PrintInfo();//调用基类的PrintInfo
+        
         cout << "Department:" << department << endl;
     }
     void SetInfo(const string & name_, const string & id_, int age_, char gender_, const string & department_){
         CStudnet::SetInfo(name_, id_, age_, gender_);//调用基类的SetInfo
+        
         department = department_;
     }
     void GetName() { return name; }
@@ -113,10 +122,15 @@ class CUndergraduateStudent:public CStudnet{
 
 ```c++
 //复合关系的使用
+
 //正确的写法：
+
 //  为 “狗” 类设一个 “业主” 类的对象指针
+
 //  为 “业主” 类设一个 “狗” 类的对象指针数组
+
 class CMaster;//CMaster必须提前声明，不能先写CMaster类后写CDog类
+
 class CDog{
     CMaster * pm;
 };
@@ -141,20 +155,29 @@ class base{
 class derived:public base{
   public:
     int i; //覆盖
+    
     void access();
     void func(); //覆盖
+    
 }
 void derived::access(){
     j = 5; //error
+    
     i = 5; //引用的是派生类的i
+    
     base::i = 5; //引用的是基类的i
+    
     func(); //派生类的
+    
     base::func(); //基类的
+    
 }
 
 derived obj;
 obj.i = 1; //引用的是派生类的i
+
 obj.base::i = 1; //引用的是基类的i
+
 ```
 
 > **一般来说，基类和派生类不定义同名成员变量。**
@@ -178,27 +201,40 @@ obj.base::i = 1; //引用的是基类的i
 ```c++
 class Father{
     private: int nPrivate; //私有成员
+    
     public: int nPublic; //公有成员
+    
     protected: int nProtected; //保护成员
+    
 };
 class Son: public Father{
     void AccessFather(){
         nPublic = 1; //ok
+        
         nPrivate = 1; //wrong
+        
         nProtected = 1; //ok，访问从基类继承的protected成员
+        
         Son f；
             f.nProtected = 1; //wrong，f不是当期对象
+        
     }
 }
 int main(){
     Father f;
     Son s;
     f.nPublic = 1; //ok
+    
     s.nPublic = 1; //ok
+    
     f.nProtected = 1; //error
+    
     s.nProtected = 1; //error
+    
     f.nPrivate = 1; //error
+    
     s.nPrivate = 1; //error
+    
     return 0;
 }
 ```
@@ -216,6 +252,7 @@ class Bug{
     void PrintBug() {};
 };
 //派生类
+
 class FlyBug:public Bug{
     int nWings;
   public:
@@ -226,13 +263,18 @@ Bug::Bug(int legs, int color){
     nColor = color;
 }
 //错误的FlyBug构造函数
+
 FlyBug::FlyBug(int legs, int color, int wings){
     nLegs = legs; //不能访问
+    
     nColor = color; //不能访问
+    
     nType = 1; //ok
+    
     nWings = wings;
 }
 //正确的FlyBug构造函数
+
 FlyBug::FlyBug(int legs, int color, int wings):Bug(legs, color){
     nWings = wings;
 }
@@ -270,9 +312,13 @@ int main(){
 }
 
 //输出结果：
+
 //Base 3 constructed
+
 //Derived constructed
+
 //Derived destructed
+
 //Base 3 destructed
 ```
 
@@ -476,8 +522,10 @@ int main()
 	for( int i = 0;i < 4;i ++ )
 	cout << SArray[i] << endl;
 	//s1的从下标0开始长度为4的子串
+    
 	cout << s1(0,4) << endl;
 	//s1的从下标5开始长度为10的子串
+    
 	cout << s1(5,10) << endl;
 	return 0;
 }
@@ -527,8 +575,10 @@ int main()
 	for( int i = 0;i < 4;i ++ )
 	cout << SArray[i] << endl;
 	//s1的从下标0开始长度为4的子串
+    
 	cout << s1(0,4) << endl;
 	//s1的从下标5开始长度为10的子串
+    
 	cout << s1(5,10) << endl;
 	return 0;
 }

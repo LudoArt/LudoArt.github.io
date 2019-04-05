@@ -53,12 +53,16 @@ class Complex{
     Complex operator- (const Complex & c);
 };
 //重载为普通函数时，参数个数为运算符目数
+
 Complex operator+ (const Complex & a, const Complex & b){
     return Complex(a.real + b.real, a.imag + b.imag); //返回一个临时对象
+    
 }
 //重载为成员函数时，参数个数为运算符目数减一
+
 Complex operator- (const Complex & c)){
     return Complex(real - c.real, imag - c.imag); //返回一个临时对象
+    
 }
 ```
 
@@ -85,22 +89,29 @@ String & String::operator = (const char * s){
 int main(){
     String s;
     s = "Goog luck."; //等价于s.operator = ("Goog luck.");
+    
     cout << s.c_str() << endl; //Goog luck.
+    
     String s2 = "hello!"; //error，该句不是赋值语句，该句应调用构造函数
+    
     s = "hello!"; //等价于s.operator = ("hello!");
+    
     cout << s.c_str() << endl; //hello!
+    
     return 0;
 }
 ```
 
 ```c++
 //赋值运算符的改进1
+
 String s1, s2;
 s1 = "this";
 s2 = "that";
 s1 = s2; //出错，此时s1和s2指向同一片内存地址，危险（浅拷贝）
 
 //改进方法
+
 String & String::operator = (const String & s){
     delete [] str;
     str = new char[strlen(s) + 1];
@@ -109,11 +120,13 @@ String & String::operator = (const String & s){
 }
 
 //赋值运算符的改进2
+
 String s;
 s = "Hello";
 s = s; //出错
 
 //改进方法（深拷贝）
+
 String & String::operator = (const String & s){
     if (this == & s)
         return * this;
@@ -133,18 +146,23 @@ class Complex{
     Complex(double r = 0.0, double i = 0.0):real(r),imag(i){}
     Complex operator+ (double r){
         //能解释 c + 5
+        
         return Complex(real + r, imag);
     }
 };
 int main(){
     Complex c;
     c = c + 5; //相当于c = c.operator+ (5);
+    
     c = 5 + c; //error
+    
 }
 
 //解决方法：在Complex类中添加一个友元函数
+
  friend Complex operator+ (double r, const Complex & c){
         //能解释 5 + c
+     
         return Complex(c.real + r, c.imag);
     }
 ```
@@ -166,16 +184,21 @@ class Complex{
 
 ostream & operator<<(ostream & os, const Complex & c){
     os << c.real << "+" << c.imag << "i"; //以“a+bi”的形式输出
+    
     return os;
 }
 
 istream & operator>>(istream & is, Complex & c){
     string s;
     is >> s; //将“a+bi”作为字符串读入，“a+bi”中间不能有空格
+    
     int pos = s.find("+", 0);
     string sTmp = s.substr(0, pos); //分离出代表实部的字符串
+    
     c.real = atof(sTmp.c_str()); //atof库函数能够将const char*指针指向的内容转换成float
+    
     sTmp = s.substr(pos + 1, s.length() - pos - 2); //分离出代表虚部的字符串
+    
     c.imag = atof(sTmp.c_str());
     return is;
 }
@@ -190,13 +213,17 @@ class Complex{
     Complex(double r = 0.0, double i = 0.0):real(r),imag(i){};
     operator double() { return real; }
     //重载强制类型转换运算符double
+    
 };
 
 int main(){
     Complex c(1.2, 3.4);
     cout << (double)c << endl; //输出1.2
+    
     double n = 2 + c; //等价于 double n = 2 + c.operator double()
+    
     cout << n; //输出3.2
+    
 }
 ```
 
@@ -224,36 +251,48 @@ class CDmeo{
   public:
     CDmeo(int i = 0):n(i) { }
     CDmeo & operator++ (); //用于前置形式
+    
     CDmeo operator++ (int); //用于后置形式
+    
     operator int () { return n; }
     friend CDmeo & operator-- (CDmeo & );
     friend CDmeo operator-- (CDmeo &, int);
 };
 CDmeo & CDmeo::operator++ (){
     //前置++
+    
     ++n;
     return * this;
     //++s即为：s.:operator++();
+    
 }
 CDmeo CDmeo::operator++ (int k){
     //后置++
+    
     CDmeo tmp(*this); //记录修改前的对象
+    
     n++;
     return tmp; //返回修改前的对象
+    
     //s++即为：s.:operator++(0);
+    
 }
 CDmeo & CDmeo::operator-- (CDmeo & d){
     //前置--
+    
     d.n--;
     return d;
     //--s即为：operator--(s);
+    
 }
 CDmeo & CDmeo::operator-- (CDmeo & d, int){
     //后置--
+    
     CDemo tmp(d);
     d.n--;
     return tmp;
     //s--即为：operator--(s, 0);
+    
 }
 ```
 
@@ -267,8 +306,10 @@ CDmeo & CDmeo::operator-- (CDmeo & d, int){
 a[i][j]的计算过程从左到右，a[i]的返回值是个指针，指向第i行的首地址
 a[i][j]就会是第i行第j列的元素了
 */
+
 class Array2 {
 	// 在此处补充你的代码
+    
 private:
 	int *p;
 	int r, c;
