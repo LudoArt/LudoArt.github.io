@@ -29,6 +29,9 @@ Complex* pc = new Complex(1, 2);
 Complex *pc;
 
 void* mem = operator new(sizeof(Complex)); //分配内存，其内部调用malloc(n)
+
 pc = static_cast<Complex*>(mem);           //转型
+
 pc->Complex::Complex(1, 2);                //构造函数
+
 ```
