@@ -35,3 +35,17 @@ pc = static_cast<Complex*>(mem);           //转型
 pc->Complex::Complex(1, 2);                //构造函数
 
 ```
+
+对于
+
+```c++
+delete pc;
+```
+
+编译器将转化为：
+
+```c++
+Complex::~Complex(pc); //析构函数
+
+operator delete(pc);   //释放内存，其内部调用free(pc)
+```
