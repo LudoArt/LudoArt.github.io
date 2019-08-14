@@ -2,7 +2,7 @@
 layout:     post
 title:      new与malloc的区别
 subtitle:   null
-date:       2019-07-27
+date:       2019-08-13
 author:     LudoArt
 header-img: img/post-bg-ios9-web.jpg
 catalog: true
