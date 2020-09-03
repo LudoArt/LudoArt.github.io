@@ -552,7 +552,7 @@ public class LauncherEditor : Editor
 }
 ```
 
-让我们添加到`OnSceneGU`I方法中，这样我们就可以拥有一个小部件，允许我们在场景视图中显示和调整偏移位置。因为偏移量是相对于父变换存储的，所以我们需要使用 [Transform.InverseTransformPoint](https://docs.unity3d.com/ScriptReference/Transform.InverseTransformPoint.html) 和 [Transform.TransformPoint](https://docs.unity3d.com/ScriptReference/Transform.TransformPoint.html) 方法将偏移量转换为世界空间，供 [Handles.PositionHandle](https://docs.unity3d.com/ScriptReference/Handles.PositionHandle.html) 方法使用，并返回到本地空间以存储在偏移量字段中。
+让我们添加到`OnSceneGU`I方法中，这样我们就可以拥有一个小部件，允许我们在场景视图中显示和调整偏移位置。因为偏移量是相对于父变换存储的，所以我们需要使用 [Transform.InverseTransformPoint](https://docs.unity3d.com/ScriptReference/Transform.InverseTransformPoint.html) 和 [Transform.TransformPoint](https://docs.unity3d.com/ScriptReference/Transform.TransformPoint.html) 方法将偏移量转换为世界坐标，供 [Handles.PositionHandle](https://docs.unity3d.com/ScriptReference/Handles.PositionHandle.html) 方法使用，并返回到本地空间以存储在偏移量字段中。
 
 ```c#
 using UnityEditor;
@@ -1272,15 +1272,15 @@ The FindClosest method returns the approximate closest position on the spline to
     }
 ```
 
-## **Creating the Editor**
+## 创建编辑器
 
-The SplineComponent works nicely, but to use it effectively inside the Unity Editor, we are going to need to make it much more user friendly.
+`SplineComponent`工作得很好，但要在Unity编辑器中有效地使用它，我们需要让它变得更加用户友好。
 
-### **A Custom Inspector (Editor/SplineComponentEditor.cs)**
+### 一个自定义的Inspector(Editor/SplineComponentEditor.cs)
 
-The first step is a custom inspector. This is created inside an Editor class via the OnInspectorGUI method. The method below sets up widgets for the component fields, and adds some buttons for some useful utility methods we will create later.
+第一步是自定义inspector。这是通过`OnInspectorGUI`方法在Editor类中创建的。下面的方法为组件字段设置了widget，并为我们稍后创建的一些有用的实用方法添加了一些按钮。
 
-```
+```c#
 [CustomEditor(typeof(SplineComponent))]
 public class SplineComponentEditor : Editor
 {    
@@ -1312,11 +1312,11 @@ public class SplineComponentEditor : Editor
 }
 ```
 
-### **Draw Gizmos**
+### 绘制Gizmos
 
-Gizmos are the visual inside the scene view that helps us identify the component, especially since it has no renderable geometry. There are 3 functions, the main drawing function (DrawGizmo) and 2 other functions which have the DrawGizmo attribute. This allows us to draw a high resolution gizmo when the spline component is selected in the hierarchy, and a low resolution gizmo at other times.
+Gizmo是场景视图里面的视觉效果，可以帮助我们识别组件，尤其是它没有可渲染的几何体。有3个函数，主要的绘制函数（`DrawGizmo`）和其他2个具有`DrawGizmo`属性的函数。这允许我们在hierarchy中选择spline组件时绘制一个高分辨率的gizmo，而在其他时候绘制一个低分辨率的gizmo。
 
-```
+```c#
     [DrawGizmo(GizmoType.NonSelected)]
     static void DrawGizmosLoRes(SplineComponent spline, GizmoType gizmoType)
     {
@@ -1349,22 +1349,22 @@ Gizmos are the visual inside the scene view that helps us identify the component
     }
 ```
 
-### **Scene View Controls**
+### 场景视图控制
 
-You will notice that we didn’t create inspector fields for the spline control points. That is because we are going to manage the control points through the scene view.
+你会注意到我们没有为spline控制点创建inspector字段，这是因为我们要通过场景视图管理控制点。
 
-These two fields store the index of the currently selected control point, and if we choose to remove a control point, we store the index of that control point too. Why? Stay tuned, this will be answered below.
+这两个字段存储了当前选中的控制点的索引，如果我们选择删除一个控制点，我们也会存储该控制点的索引。
 
-```
+```c#
 int hotIndex = -1;
 int removeIndex = -1;
 ```
 
-The OnSceneGUI method allows us to draw widgets inside the scene view when the component is selected in the hierarchy. If the mouse cursor is not over the scene view, we early exit the method to avoid the potentially expensive drawing which can really slow down the Editor when in play mode.
+当组件在hierarchy中被选中时，`OnSceneGUI`方法允许我们在场景视图内绘制部件。如果鼠标光标没有在场景视图上，我们提前退出该方法，以避免潜在的昂贵的绘制，当处于播放模式时，这可能真的会拖慢编辑器的速度。
 
-If the user is holding down the shift key, we perform some special visualization as we are going to use shift + left click events to add control points.
+如果用户按住shift键，我们会进行一些特殊的可视化操作，因为我们要使用shift+左键事件来添加控制点。
 
-```
+```c#
     void OnSceneGUI()
     {
         var spline = target as SplineComponent;
@@ -1389,11 +1389,11 @@ If the user is holding down the shift key, we perform some special visualization
         }
 ```
 
-### **Loop over the serialized property**
+### 在序列化属性上循环
 
-When modifying control points, a SerializedProperty is used instead of directly modifying the points list, or using the appropriate methods on the component. This is done so that Undo/Redo functionality is automatically applied to the entire point list, including position value. To use the control point in the scene view, it must be converted into world space using the TransformPoint method.
+当修改控制点时，使用`SerializedProperty`代替直接修改点列表，或者使用组件上的相应方法。这样做是为了使Undo/Redo功能自动应用到整个点列表，包括位置值。要在场景视图中使用控制点，必须使用`TransformPoint`方法将其转换为世界坐标。
 
-```
+```c#
         for (int i = 0; i < spline.points.Count; i++)
         {
             var prop = points.GetArrayElementAtIndex(i);
@@ -1401,13 +1401,13 @@ When modifying control points, a SerializedProperty is used instead of directly 
             var wp = spline.transform.TransformPoint(point);
 ```
 
-### **Draw control widgets for the selected control point**
+### 为选定的控制点绘制控制部件
 
-If the current control point is ‘hot’ (selected by the user), the Handles which allow position modification are drawn. We only update the position value of the property if the handle was moved.
+如果当前控制点是 "热的"（被用户选择），允许修改位置的Handles就会被绘制出来。我们只有在Handles被移动的情况下才会更新属性的位置值。
 
-Command events are also applied only to the hot control point, these are put into the HandleCommands method for readability.
+命令事件也只应用于热控制点，为了便于阅读，这些事件被放到`HandleCommands`方法中。
 
-```
+```c#
             if (hotIndex == i)
             {
                 var newWp = Handles.PositionHandle(wp, Tools.pivotRotation == PivotRotation.Global ? Quaternion.identity : spline.transform.rotation);
@@ -1421,20 +1421,20 @@ Command events are also applied only to the hot control point, these are put int
             }
 ```
 
-### **Allow selection of control points**
+### 允许选择控制点
 
-How does the user select which control point to edit? The Handles.Button method works just like a regular IMGUI Button method, however it allows us to use a sphere as the button visual instead of a GUI button. This is perfect for visualizing and selecting points in the scene view. We use the GetHandleSize method so that the button-spheres are drawn at a consistent size across the scene, regardless of the camera position.
+用户如何选择要编辑的控制点？`Handles.Button`方法的工作原理就像普通的IMGUI Button方法一样，但是它允许我们使用一个球体作为按钮视觉，而不是GUI按钮。这对于在场景视图中可视化和选择点是完美的。我们使用`GetHandleSize`方法使按钮球体在整个场景中以一致的大小绘制，无论摄像机的位置如何。
 
-```
+```c#
             Handles.color = i == 0 | i == spline.points.Count - 1 ? Color.red : Color.white;
             var buttonSize = HandleUtility.GetHandleSize(wp) * 0.1f;
             if (Handles.Button(wp, Quaternion.identity, buttonSize, buttonSize, Handles.SphereHandleCap))
                 hotIndex = i;
 ```
 
-We also draw the index of the control point using Handles.Label. This is a great idea to help you debug problems in the future.
+我们还可以使用`Handles.Label`来绘制控制点的索引。这是一个很好的主意，可以帮助你在将来调试问题。
 
-```
+```c#
             var v = SceneView.currentDrawingSceneView.camera.transform.InverseTransformPoint(wp);
             var labelIsOutside = v.z < 0;
             if (!labelIsOutside) Handles.Label(wp, i.ToString());
@@ -1442,11 +1442,11 @@ We also draw the index of the control point using Handles.Label. This is a great
         }
 ```
 
-### **Perform deletion last**
+### 进行最后的删除
 
-Remember the removeIndex field we created? This is where we use the value of that field to remove a control point. This happens right at the end of the OnSceneGUI method, so that next time the method is called it will have a correct list of control points. It also avoids modifying the list of points during other method calls, which can cause problems when iterating over the changed list.
+还记得我们创建的`removeIndex`字段吗？这就是我们使用该字段的值来删除一个控制点的地方。这发生在`OnSceneGUI`方法的结尾，这样下次调用该方法时，它将有一个正确的控制点列表。这也避免了在其他方法调用过程中修改点的列表，这可能会在迭代改变的列表时引起问题。
 
-```
+```c#
         if (removeIndex >= 0 && points.arraySize > 4)
         {
             points.DeleteArrayElementAtIndex(removeIndex);
@@ -1454,11 +1454,11 @@ Remember the removeIndex field we created? This is where we use the value of tha
         }
 ```
 
-Remember to set removeIndex to -1, otherwise we will delete a point every frame!
+记得把`removeIndex`设置为-1，否则我们每隔一帧就会删除一个点！
 
-Also, to persist the changes we must must call ApplyModifiedProperties.
+另外，要持久化修改，我们必须调用`ApplyModifiedProperties`。
 
-```
+```c#
         removeIndex = -1;
         serializedObject.ApplyModifiedProperties();
 
@@ -1466,13 +1466,13 @@ Also, to persist the changes we must must call ApplyModifiedProperties.
     }
 ```
 
-### **Intercept and Handle Keyboard Commands**
+### 拦截和处理键盘命令
 
-This is the method mentioned previously for handling commands which are intended for the hot control point. The first command is ‘FrameSelected’, which occurs when you press the F key in the scene view. We intercept the command here, so that instead of framing the game object which the spline component is attached to, we frame the hot control point.
+这就是前面提到的处理命令的方法，这些命令是针对热控制点的。第一个命令是`FrameSelected`，当你在场景视图中按下F键时就会发生。我们在这里拦截了这个命令，这样我们就不会框住spline组件所连接的游戏对象，而是框住热控制点。
 
-The second command catches the Backspace keypress, allowing the hot control point to be scheduled for deletion, by assign it’s index to the removeIndex field.
+第二条命令拦截Backspace键，通过将热控制点的索引分配给`removeIndex`字段，让它被计划删除。
 
-```
+```c#
     void HandleCommands(Vector3 wp)
     {
         if (Event.current.type == EventType.ExecuteCommand)
@@ -1494,7 +1494,7 @@ The second command catches the Backspace keypress, allowing the hot control poin
     }
 ```
 
-### **Allow adding and inserting control points**
+### 允许添加和插入控制点
 
 These are the two functions which are called from OnSceneGUI when the user has the shift key pressed. They have slightly different behaviour depending on whether the spline is closed or open, so for clarity this is split into two different methods.
 
@@ -1504,7 +1504,15 @@ They then check for the left click of the mouse button and if clicked use the Se
 
 As both methods have the common function of searching for a closest point, this function is split out into a separate method.
 
-```
+当用户按下shift键时，`OnSceneGUI`会调用这两个函数。根据spline是闭合还是打开，它们的行为略有不同，所以为了清楚起见，将其分成两个不同的方法。
+
+这两种方法的功能相似。它们从鼠标光标画一条线到spline上的交叉点，在那里将插入新的控制点。在开放spline的情况下，当从其中一个端点延伸spline时，它们也会显示一条线。
+
+然后，它们会检查鼠标按钮的左键点击，如果点击了，则使用`SerializedProperty` API将一个项目插入到点的列表中，然后将它的值设置为新的控制点位置。
+
+由于这两种方法的共同功能都是寻找一个最近的点，所以这个功能被拆分出来，成为一个单独的方法。
+
+```c#
     void ShowClosestPointOnClosedSpline(SerializedProperty points)
     {
         var spline = target as SplineComponent;
@@ -1607,11 +1615,11 @@ As both methods have the common function of searching for a closest point, this 
     }
 ```
 
-### **Add Utility Methods**
+### 添加实用方法
 
-The final task is to create the utility methods which are called by the custom inspector buttons. The first method flattens the y position of all the control points. The second repositions all the control points, so that the GameObjects’s transform is at the center of all the control points.
+最后的任务是创建由自定义inspector按钮调用的实用方法。第一个方法将所有控制点的y位置平坦化。第二个方法是重新定位所有控制点，使GameObjects的变换位于所有控制点的中心。
 
-```
+```c#
     void Flatten(List<Vector3> points)
     {
         for (int i = 0; i < points.Count; i++)
@@ -1638,3 +1646,308 @@ The final task is to create the utility methods which are called by the custom i
 ```
 
 #  7.使用IK（Inverse Kinematics，逆运动学）
+
+逆运动学(IK)是计算一组关节的旋转的过程，以使最终关节到达某个位置。例如，IK可以用来计算肩部、肘部和手腕的旋转，这些旋转是手指到达空间中某一点所需要的。
+
+## 设置一个测试场景进行开发
+
+需要一个手臂段的模型，该模型的设置是forward轴与Unity的forward轴（x:0,y:0,z:1）相匹配，支点设置在关节应该围绕的同一位置旋转。
+
+![img](https://connect-cdn-public-prd.unitychina.cn/h1/20190130/31801b2e-8db3-47c7-aeb3-867b6e437314_getting_started_with_ik_0.png)
+
+创建一个空的游戏对象，它将是你的手臂的根。创建第二个空的子游戏对象，作为主枢轴。然后，连接三个段来创建一个手臂。最后，在层次结构的最后创建一个空的GameObject，并将其命名为 "Tip"。这个位置就是你要匹配目标位置的点。
+
+![img](https://connect-cdn-public-prd.unitychina.cn/h1/20190130/91075a4b-a018-4d2e-987a-1e4b2dde7fb1_getting_started_with_ik_1.png)
+
+使用 "场景 "视图中的位置手柄，布置你的GameObjects，使它们类似于一个机械臂，类似于下面的截图。请注意，GameObject Tip被定位在最后一段的最末端。
+
+![img](https://connect-cdn-public-prd.unitychina.cn/h1/20190130/ecd699c9-efb2-41e1-88a2-771ad1b5db8f_getting_started_with_ik_2.png)
+
+### 敲代码环节
+
+我们的IK算法将使用[余弦定律](https://en.wikipedia.org/wiki/Law_of_cosines)和一点点作弊来计算出最终的效果器角度。效果器是Tip的父变换。枢轴是根节点之后的第一个变换。这样我们的链子中间就剩下两个变换。如果我们手动定位枢轴和效果器，我们可以使用余弦定律来计算中间两个变换的正确旋转。
+
+### Monobehaviour 类
+
+创建一个名为`SimpleIKSolver.cs`的新脚本。我们需要添加持有变换链所需的字段，以及执行计算所需的数据。
+
+```c#
+public class SimpleIKSolver : MonoBehaviour
+{
+
+    public Transform pivot, upper, lower, effector, tip;
+    public Vector3 target = Vector3.forward;
+    public Vector3 normal = Vector3.up;
+
+
+
+
+    float upperLength, lowerLength, effectorLength, pivotLength;
+    Vector3 effectorTarget, tipTarget;
+}
+```
+
+这个行为类应该被分配给pivot gameobject。但在这之前，我们将创建一个方法来使组件检查器的设置不那么痛苦！将下面的方法添加到你的类中，然后将其作为组件添加到pivot gameobject中。
+
+```c#
+void Reset()
+{
+{
+    pivot = transform;
+    try
+    {
+        upper = pivot.GetChild(0);
+        lower = upper.GetChild(0);
+        effector = lower.GetChild(0);
+        tip = effector.GetChild(0);
+    }
+    catch (UnityException)
+    {
+        Debug.Log("Could not find required transforms, please assign manually.");
+    }
+}
+```
+
+当组件第一次连接到游戏对象上时，这个方法会自动运行，它试图找到所需的游戏对象，并将它们分配到检查器中的正确插槽中。它试图找到所需的gameobjects，并将它们分配到检查器中的正确插槽中。然而，如果它找不到游戏对象，它将打印出一条有用的信息。
+
+现在我们需要收集一些数据，用于我们的三角计算。我们需要的数据是每个段的长度。我们应该在运行时在Awake方法中做这个工作，这样我们就知道它对于当前的层次结构的设置总是正确的。
+
+```c#
+void Awake()
+{
+    upperLength = (lower.position - upper.position).magnitude;
+    lowerLength = (effector.position - lower.position).magnitude;
+    effectorLength = (tip.position - effector.position).magnitude;
+    pivotLength = (upper.position - pivot.position).magnitude;
+}
+```
+
+接下来，`Update`函数要计算目标位置，并调用尚未编写的`Solve`方法。
+
+```c#
+void Update()
+{
+    tipTarget = target;
+    effectorTarget = target + normal * effectorLength;
+    Solve();
+}
+```
+
+这时我们开始有点作弊了。我们直接使用法线字段设置最终段的方向。这个字段可以设置为一个恒定值，也可以根据碰撞法线或其他机制动态改变。由于我们知道最终段的方向，我们就可以利用已知的方向和效果器的长度，计算效果器变换的目标位置。
+
+### IK算法
+
+下面列出完整的IK算法，方便大家复制/粘贴。
+
+我们知道了最后一个关节的方向，还剩下三个关节需要解决。让我们再作弊，旋转枢轴变换，使其直接看向tipTarget。
+
+```
+var pivotDir = effectorTarget - pivot.position;
+pivot.rotation = Quaternion.LookRotation(pivotDir);
+```
+
+剩下的两个旋转我们需要计算，幸运的是这是一个众所周知的问题，我们可以用三角法（余弦定律）解决。变量'a'、'b'和'c'是变换链形成的三角形的长度。
+
+```c#
+    var upperToTarget = (effectorTarget - upper.position);
+    var a = upperLength;
+    var b = lowerLength;
+    var c = upperToTarget.magnitude;
+```
+
+然后我们可以应用余弦定律来计算abc三角形的内角。
+
+var B = Mathf.Acos((c *c + a* a - b *b) / (2* c *a))* Mathf.Rad2Deg; 
+
+var C = Mathf.Acos((a *a + b* b - c *c) / (2* a *b))* Mathf.Rad2Deg;
+
+注意，我们需要检查C是一个有效的数字，因为有时我们可以用我们的关节方向形成一个不可能解决的三角形。如果C变量是确定的，下一步是将角度转换为我们可以应用于我们的段的旋转。此外，由于我们正在处理局部旋转，我们围绕全局向量（Vector3.right）进行旋转。
+
+```c#
+if (!float.IsNaN(C))
+{
+{
+    var upperRotation = Quaternion.AngleAxis((-B), Vector3.right);
+    upper.localRotation = upperRotation;
+    var lowerRotation = Quaternion.AngleAxis(180 - C, Vector3.right);
+    lower.localRotation = lowerRotation;
+}
+```
+
+最后，我们将最后一段(效应器)定向到指向tipTarget。
+
+```c#
+var effectorRotation = Quaternion.LookRotation(tipTarget - effector.position);
+effector.rotation = effectorRotation;
+```
+
+完整的`Solve`方法：
+
+```c#
+void Solve()
+{
+    var pivotDir = effectorTarget - pivot.position;
+    pivot.rotation = Quaternion.LookRotation(pivotDir);
+
+
+    var upperToTarget = (effectorTarget - upper.position);
+    var a = upperLength;
+    var b = lowerLength;
+    var c = upperToTarget.magnitude;
+
+
+    var B = Mathf.Acos((c * c + a * a - b * b) / (2 * c * a)) * Mathf.Rad2Deg;
+    var C = Mathf.Acos((a * a + b * b - c * c) / (2 * a * b)) * Mathf.Rad2Deg;
+
+
+    if (!float.IsNaN(C))
+    {
+        var upperRotation = Quaternion.AngleAxis((-B), Vector3.right);
+        upper.localRotation = upperRotation;
+        var lowerRotation = Quaternion.AngleAxis(180 - C, Vector3.right);
+        lower.localRotation = lowerRotation;
+    }
+    var effectorRotation = Quaternion.LookRotation(tipTarget - effector.position);
+    effector.rotation = effectorRotation;
+}
+```
+
+此时，IK解已经完成了，应该可以在你的编辑器中使用。但它目前还不太容易调试或使用，所以我们需要添加一些编辑器控件，让我们测试系统是否按照预期工作。
+
+## 编辑器的脚本编写
+在Editor文件夹中创建一个新的脚本，称它为`SimpleIKSolverEditor.cs`。编辑脚本并粘贴这段代码。
+
+```c#
+[CustomEditor(typeof(SimpleIKSolver))]
+public class SimpleIKSolverEditor : Editor
+{
+}
+```
+
+First, we will modify the inspector to warn us when any of the transforms required for our solver are missing. If any of the transforms are null, we will display an error message directly in the inspector. Then, we draw the default inspector as the default functionality is good enough for this component.
+
+现在，我们准备开始自定义编辑器了
+
+### 自定义Inspector
+
+首先，我们将修改Inspector，当我们的求解器所需的任何变换丢失时，我们将发出警告。如果任何一个变换是空的，我们将直接在Inspector中显示一个错误信息。然后，我们画出默认的Inspector，因为默认的功能对这个组件来说已经足够好了。
+
+```c#
+public override void OnInspectorGUI()
+{
+    var s = target as SimpleIKSolver;
+    if (s.pivot == null || s.upper == null || s.lower == null | s.effector == null || s.tip == null)
+        EditorGUILayout.HelpBox("Please assign Pivot, Upper, Lower, Effector and Tip transforms.", MessageType.Error);
+    base.OnInspectorGUI();
+}
+```
+
+![img](https://connect-cdn-public-prd.unitychina.cn/h1/20190130/28d94acb-d809-40f4-8e74-8d6d7c8c2a06_getting_started_with_ik_3.png)
+
+Second, we are going to write a gizmo function for showing the same error information from the inspector, in the sceneview. We can also draw some helpful information, showing the distance from our target position to the tip position. The default labels in the sceneview are a bit difficult to see, so create an guistyle which we can use to make them more visible.
+
+### 定制Gizmo
+
+其次，我们要写一个小工具函数，用于在场景视图中显示来自Inspector的同样的错误信息，我们还可以绘制一些有用的信息，显示从目标位置到尖端位置的距离。在场景视图中的默认标签有点难看，所以创建一个`GUIStyle`，我们可以用它来使它们更明显。
+
+```c#
+static GUIStyle errorBox;
+
+
+void OnEnable()
+{
+    errorBox = new GUIStyle(EditorGUIUtility.GetBuiltinSkin(EditorSkin.Scene).box);
+    errorBox.normal.textColor = Color.red;
+}
+```
+
+这是一个在场景视图中绘制小工具的函数，我们将刚刚创建的`GUIStyle`传递给`Handles.Label`方法。如果缺少任何一个变换，我们立即退出该方法，因为进一步的绘制操作都将无法进行。
+
+最后，我们绘制一条蓝色的线，显示链中的段，一条虚线显示尖端位置和目标位置之间的三角。
+
+```c#
+[DrawGizmo(GizmoType.Selected)]
+static void OnDrawGizmosSelected(SimpleIKSolver siks, GizmoType gizmoType)
+{
+    Handles.color = Color.blue;
+    if (siks.pivot == null)
+    {
+        Handles.Label(siks.transform.position, "Pivot is not assigned", errorBox);
+        return;
+    }
+    if (siks.upper == null)
+    {
+        Handles.Label(siks.pivot.position, "Upper is not assigned", errorBox);
+        return;
+    }
+    if (siks.lower == null)
+    {
+        Handles.Label(siks.upper.position, "Lower is not assigned", errorBox);
+        return;
+    }
+    if (siks.effector == null)
+    {
+        Handles.Label(siks.lower.position, "Effector is not assigned", errorBox);
+        return;
+    }
+    if (siks.tip == null)
+    {
+        Handles.Label(siks.effector.position, "Tip is not assigned", errorBox);
+        return;
+    }
+    Handles.DrawPolyLine(siks.pivot.position, siks.upper.position, siks.lower.position, siks.effector.position, siks.tip.position);
+    Handles.DrawDottedLine(siks.tip.position, siks.target, 3);
+    Handles.Label(siks.upper.position, "Upper");
+    Handles.Label(siks.effector.position, "Effector");
+    Handles.Label(siks.lower.position, "Lower");
+    Handles.Label(siks.target, "Target");
+    var distanceToTarget = Vector3.Distance(siks.target, siks.tip.position);
+    var midPoint = Vector3.Lerp(siks.target, siks.tip.position, 0.5f);
+    Handles.Label(midPoint, string.Format("Distance to Target: {0:0.00}", distanceToTarget));
+}
+```
+
+![img](https://connect-cdn-public-prd.unitychina.cn/h1/20190130/1fb8ae16-f702-42a3-97c0-3c3ba4ba5b20_getting_started_with_ik_4.png.2000x0x1.webp)
+
+### 自定义场景视图
+
+最后两个函数在每个支点画一个旋转句柄，让你可以旋转链中的每个关节，而不必取消选择主支点变换。我们还用一个位置句柄来表示目标位置，用一个旋转句柄来修改法域。
+
+![img](https://connect-cdn-public-prd.unitychina.cn/h1/20190130/b3047c04-02cd-4d04-b1a7-9986f732bd34_getting_started_with_ik_5.png)
+
+```c#
+public void OnSceneGUI()
+{
+{
+    var siks = target as SimpleIKSolver;
+    RotationHandle(siks.effector);
+    RotationHandle(siks.lower);
+    RotationHandle(siks.upper);
+    siks.target = Handles.PositionHandle(siks.target, Quaternion.identity);
+    var normalRotation = Quaternion.LookRotation(Vector3.forward, siks.normal);
+    normalRotation = Handles.RotationHandle(normalRotation, siks.tip.position);
+    siks.normal = normalRotation * Vector3.up;
+}
+```
+
+这个方法将为任何变换绘制一个旋转手柄。我们在上面的上、下和效果器变换中使用它。只有在旋转值被改变的情况下，它才会改变它，这是通过使用`BeginChangeCheck`和`EndChangeCheck`方法来检测的。如果它被改变了，我们就记录下变换的状态，这样Undo/Redo系统就会正常工作，然后将新的旋转值分配给`transform.rotation`属性。
+
+```c#
+void RotationHandle(Transform transform)
+{
+    if (transform != null)
+    {
+        EditorGUI.BeginChangeCheck();
+        var rotation = Handles.RotationHandle(transform.rotation, transform.position);
+        if (EditorGUI.EndChangeCheck())
+        {
+            Undo.RecordObject(transform, "Rotate");
+            transform.rotation = rotation;
+        }
+    }
+}
+```
+
+现在，我们有了一个简单的IK系统，它有一个漂亮的编辑器界面，可以扩展和使用任何变换链。
+
+![img](https://connect-cdn-public-prd.unitychina.cn/h1/20190130/4aa2050e-ef96-4a57-9db3-c59791f45626_getting_started_with_ik_6.png)
