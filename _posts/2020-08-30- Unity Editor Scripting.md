@@ -49,7 +49,7 @@ public class LevelScriptEditor : Editor
         LevelScript myLevelScript = (LevelScript)target;
         
         // IntField可读可写
-        LevelScript.experience = EditorGUILayout.IntField("Experience", myLevelScript.experience);
+        myLevelScript.experience = EditorGUILayout.IntField("Experience", myLevelScript.experience);
         // LabelField仅可读
         EditorGUILayout.LabelField("Level", myLevelScript.Level.ToString());
     }
